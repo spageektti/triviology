@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:triviology/home_page.dart';
-import 'package:triviology/profile_page.dart';
+import 'package:triviology/stats_page.dart';
 
 class NavigationWidget extends StatefulWidget {
   const NavigationWidget({super.key});
@@ -14,7 +14,7 @@ class _NavigationWidgetState extends State<NavigationWidget> {
 
   static const List<Widget> _pages = <Widget>[
     HomePage(),
-    ProfilePage(),
+    StatsPage(),
   ];
 
   void _onItemTapped(int index) {
