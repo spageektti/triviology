@@ -1,6 +1,6 @@
 # triviology
 
-A new Flutter project.
+A fun and challenging trivia app to test your knowledge on various topics!
 
 ## Getting Started
 
