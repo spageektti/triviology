@@ -89,11 +89,11 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.yourcompany" "\0"
+            VALUE "CompanyName", "cc.spageektti" "\0"
             VALUE "FileDescription", "triviology" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "triviology" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2024 com.yourcompany. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2024 cc.spageektti. All rights reserved." "\0"
             VALUE "OriginalFilename", "triviology.exe" "\0"
             VALUE "ProductName", "triviology" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"

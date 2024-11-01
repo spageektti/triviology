@@ -1,4 +1,4 @@
-package com.yourcompany.triviology
+package cc.spageektti.triviology
 
 import io.flutter.embedding.android.FlutterActivity
 
