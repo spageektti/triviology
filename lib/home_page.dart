@@ -1,30 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:triviology/quiz_page.dart';
 
 final List<Map<String, dynamic>> categories = [
-  {'icon': Icons.question_answer, 'text': 'General Knowledge'},
-  {'icon': Icons.book, 'text': 'Books'},
-  {'icon': Icons.movie, 'text': 'Film'},
-  {'icon': Icons.headphones, 'text': 'Music'},
-  {'icon': Icons.theater_comedy, 'text': 'Musicals & Theatres'},
-  {'icon': Icons.tv, 'text': 'Television'},
-  {'icon': Icons.videogame_asset, 'text': 'Video Games'},
-  {'icon': Icons.extension, 'text': 'Board Games'},
-  {'icon': Icons.nature, 'text': 'Science & Nature'},
-  {'icon': Icons.computer, 'text': 'Computers'},
-  {'icon': Icons.calculate, 'text': 'Mathematics'},
-  {'icon': Icons.menu_book, 'text': 'Mythology'},
-  {'icon': Icons.sports, 'text': 'Sports'},
-  {'icon': Icons.map, 'text': 'Geography'},
-  {'icon': Icons.history_edu, 'text': 'History'},
-  {'icon': Icons.how_to_vote, 'text': 'Politics'},
-  {'icon': Icons.brush, 'text': 'Art'},
-  {'icon': Icons.star, 'text': 'Celebrities'},
-  {'icon': Icons.pets, 'text': 'Animals'},
-  {'icon': Icons.directions_car, 'text': 'Vehicles'},
-  {'icon': Icons.my_library_books, 'text': 'Comics'},
-  {'icon': Icons.devices_other, 'text': 'Gadgets'},
-  {'icon': Icons.face, 'text': 'Japanese Anime & Manga'},
-  {'icon': Icons.animation, 'text': 'Cartoon & Animations'},
+  {'icon': Icons.question_answer, 'text': 'General Knowledge', 'id': 9},
+  {'icon': Icons.book, 'text': 'Books', 'id': 10},
+  {'icon': Icons.movie, 'text': 'Film', 'id': 11},
+  {'icon': Icons.headphones, 'text': 'Music', 'id': 12},
+  {'icon': Icons.theater_comedy, 'text': 'Musicals & Theatres', 'id': 13},
+  {'icon': Icons.tv, 'text': 'Television', 'id': 14},
+  {'icon': Icons.videogame_asset, 'text': 'Video Games', 'id': 15},
+  {'icon': Icons.extension, 'text': 'Board Games', 'id': 16},
+  {'icon': Icons.science_rounded, 'text': 'Science & Nature', 'id': 17},
+  {'icon': Icons.computer, 'text': 'Computers', 'id': 18},
+  {'icon': Icons.calculate, 'text': 'Mathematics', 'id': 19},
+  {'icon': Icons.menu_book, 'text': 'Mythology', 'id': 20},
+  {'icon': Icons.sports, 'text': 'Sports', 'id': 21},
+  {'icon': Icons.map, 'text': 'Geography', 'id': 22},
+  {'icon': Icons.history_edu, 'text': 'History', 'id': 23},
+  {'icon': Icons.how_to_vote, 'text': 'Politics', 'id': 24},
+  {'icon': Icons.brush, 'text': 'Art', 'id': 25},
+  {'icon': Icons.star, 'text': 'Celebrities', 'id': 26},
+  {'icon': Icons.pets, 'text': 'Animals', 'id': 27},
+  {'icon': Icons.directions_car, 'text': 'Vehicles', 'id': 28},
+  {'icon': Icons.my_library_books, 'text': 'Comics', 'id': 29},
+  {'icon': Icons.devices_other, 'text': 'Gadgets', 'id': 10},
+  {'icon': Icons.face, 'text': 'Japanese Anime & Manga', 'id': 31},
+  {'icon': Icons.animation, 'text': 'Cartoon & Animations', 'id': 32},
 ];
 
 class HomePage extends StatelessWidget {
@@ -33,12 +34,23 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Select a category'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.info_outline_rounded),
+            onPressed: () {
+              print('Info button tapped.');
+            },
+          ),
+        ],
+      ),
       body: GridView.builder(
         padding: const EdgeInsets.all(20),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
+          crossAxisSpacing: 5,
+          mainAxisSpacing: 5,
         ),
         itemCount: categories.length,
         itemBuilder: (context, index) {
@@ -47,7 +59,10 @@ class HomePage extends StatelessWidget {
             child: InkWell(
               splashColor: Colors.blue.withAlpha(30),
               onTap: () {
-                print('${category['text']} tapped.');
+                print('Category with id: ${category['id']} tapped.');
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return QuizPage(categoryId: category['id']);
+                }));
               },
               customBorder: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
@@ -57,7 +72,10 @@ class HomePage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Icon(category['icon'], size: 50),
-                    Text(category['text']),
+                    Text(
+                      category['text'],
+                      textAlign: TextAlign.center,
+                    ),
                   ],
                 ),
               ),
