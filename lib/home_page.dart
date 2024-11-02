@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:triviology/quiz_page.dart';
+import 'package:triviology/quiz_settings_page.dart';
 
 final List<Map<String, dynamic>> categories = [
   {'icon': Icons.question_answer, 'text': 'General Knowledge', 'id': 9},
@@ -61,7 +61,7 @@ class HomePage extends StatelessWidget {
               onTap: () {
                 print('Category with id: ${category['id']} tapped.');
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return QuizPage(categoryId: category['id']);
+                  return QuizSettingsPage(categoryId: category['id']);
                 }));
               },
               customBorder: RoundedRectangleBorder(

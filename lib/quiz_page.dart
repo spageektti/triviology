@@ -14,7 +14,7 @@ class _QuizPageState extends State<QuizPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('0/10 questions answered'),
+        title: const Text('General Knowledge'),
       ),
       body: const Center(
         child: Text('This is the quiz page'),
