@@ -73,9 +73,9 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
             if (_current_setting == 2) ...[
               const Text('Question type:'),
               Slider(
-                value: _questionType == 'multiple'
+                value: _questionType == 'boolean'
                     ? 0
-                    : _questionType == 'boolean'
+                    : _questionType == 'multiple'
                         ? 1
                         : 2,
                 min: 0,
@@ -89,9 +89,9 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                 onChanged: (value) {
                   setState(() {
                     _questionType = value.toInt() == 0
-                        ? 'multiple'
+                        ? 'boolean'
                         : value.toInt() == 1
-                            ? 'boolean'
+                            ? 'multiple'
                             : '';
                   });
                 },
@@ -101,7 +101,7 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
               onPressed: () {
                 if (_current_setting == 2) {
                   print(
-                      'Quiz started with $_numOfQuestions questions and $_difficulty difficulty.');
+                      'Quiz started with $_numOfQuestions questions, $_difficulty difficulty, and $_questionType question type.');
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return QuizPage(
                       categoryId: widget.categoryId,
