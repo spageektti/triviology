@@ -14,11 +14,6 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
   int _numOfQuestions = 5;
   String _difficulty = 'easy';
   String _questionType = 'multiple';
-  final List<String> questionTypes = [
-    'multiple choice',
-    'true/false',
-    'any type'
-  ];
   int _current_setting = 0;
 
   @override
@@ -31,48 +26,53 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('Number of questions:'),
-            Slider(
-              value: _numOfQuestions.toDouble(),
-              min: 1,
-              max: 50,
-              divisions: 49,
-              label: _numOfQuestions.toString(),
-              onChanged: (double value) {
-                setState(() {
-                  _numOfQuestions = value.toInt();
-                });
-              },
-            ),
-            const Text('Difficulty:'),
-            Slider(
-              value: _difficulty == 'easy'
-                  ? 0
-                  : _difficulty == 'medium'
-                      ? 1
-                      : 2,
-              min: 0,
-              max: 2,
-              divisions: 2,
-              label: _difficulty,
-              onChanged: (value) {
-                setState(() {
-                  switch (value.toInt()) {
-                    case 0:
-                      _difficulty = 'easy';
-                      break;
-                    case 1:
-                      _difficulty = 'medium';
-                      break;
-                    case 2:
-                      _difficulty = 'hard';
-                      break;
-                  }
-                });
-              },
-            ),
-            const Text('Question type:'),
-            Slider(
+            if (_current_setting == 0) ...[
+              const Text('Number of questions:'),
+              Slider(
+                value: _numOfQuestions.toDouble(),
+                min: 1,
+                max: 50,
+                divisions: 49,
+                label: _numOfQuestions.toString(),
+                onChanged: (double value) {
+                  setState(() {
+                    _numOfQuestions = value.toInt();
+                  });
+                },
+              ),
+            ],
+            if (_current_setting == 1) ...[
+              const Text('Difficulty:'),
+              Slider(
+                value: _difficulty == 'easy'
+                    ? 0
+                    : _difficulty == 'medium'
+                        ? 1
+                        : 2,
+                min: 0,
+                max: 2,
+                divisions: 2,
+                label: _difficulty,
+                onChanged: (value) {
+                  setState(() {
+                    switch (value.toInt()) {
+                      case 0:
+                        _difficulty = 'easy';
+                        break;
+                      case 1:
+                        _difficulty = 'medium';
+                        break;
+                      case 2:
+                        _difficulty = 'hard';
+                        break;
+                    }
+                  });
+                },
+              ),
+            ],
+            if (_current_setting == 2) ...[
+              const Text('Question type:'),
+              Slider(
                 value: _questionType == 'multiple'
                     ? 0
                     : _questionType == 'boolean'
@@ -81,11 +81,11 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                 min: 0,
                 max: 2,
                 divisions: 2,
-                label: questionTypes[_questionType == 'multiple'
-                    ? 0
+                label: _questionType == 'multiple'
+                    ? 'Multiple Choice'
                     : _questionType == 'boolean'
-                        ? 1
-                        : 2],
+                        ? 'True/False'
+                        : 'Any Type',
                 onChanged: (value) {
                   setState(() {
                     _questionType = value.toInt() == 0
@@ -94,10 +94,12 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                             ? 'boolean'
                             : '';
                   });
-                }),
+                },
+              ),
+            ],
             ElevatedButton(
               onPressed: () {
-                if (_current_setting == 3) {
+                if (_current_setting == 2) {
                   print(
                       'Quiz started with $_numOfQuestions questions and $_difficulty difficulty.');
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -111,7 +113,7 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                   });
                 }
               },
-              child: _current_setting == 3
+              child: _current_setting == 2
                   ? const Text('Start Quiz')
                   : const Text('Next'),
             ),
