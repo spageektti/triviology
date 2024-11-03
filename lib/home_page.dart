@@ -61,7 +61,9 @@ class HomePage extends StatelessWidget {
               onTap: () {
                 print('Category with id: ${category['id']} tapped.');
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return QuizSettingsPage(categoryId: category['id']);
+                  return QuizSettingsPage(
+                      categoryId: category['id'],
+                      categoryName: category['text']);
                 }));
               },
               customBorder: RoundedRectangleBorder(

@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:triviology/quiz_page.dart';
 
 class QuizSettingsPage extends StatefulWidget {
-  const QuizSettingsPage({super.key, required this.categoryId});
+  const QuizSettingsPage(
+      {super.key, required this.categoryId, required this.categoryName});
 
   final int categoryId;
+  final String categoryName;
 
   @override
   _QuizSettingsPageState createState() => _QuizSettingsPageState();
@@ -42,7 +44,7 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
               ),
             ],
             if (_current_setting == 1) ...[
-              const Text('Difficulty:'),
+              /*const Text('Difficulty:'),
               Slider(
                 value: _difficulty == 'easy'
                     ? 0
@@ -68,11 +70,90 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                     }
                   });
                 },
+              ),*/
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Card(
+                      child: Column(
+                        children: [
+                          const Icon(Icons.star, color: Colors.yellow),
+                          const Text('Easy', style: TextStyle(fontSize: 20)),
+                          const Text('    1XP  / answer    '),
+                          Radio(
+                            value: 'easy',
+                            groupValue: _difficulty,
+                            onChanged: (value) {
+                              setState(() {
+                                _difficulty = value.toString();
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Card(
+                      child: Column(
+                        children: [
+                          const Row(
+                            children: [
+                              Icon(Icons.star, color: Colors.yellow),
+                              Icon(Icons.star, color: Colors.yellow),
+                            ],
+                          ),
+                          const Text('Medium', style: TextStyle(fontSize: 20)),
+                          const Text('    2XP  / answer    '),
+                          Radio(
+                            value: 'medium',
+                            groupValue: _difficulty,
+                            onChanged: (value) {
+                              setState(() {
+                                _difficulty = value.toString();
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Card(
+                      child: Column(
+                        children: [
+                          const Row(
+                            children: [
+                              Icon(Icons.star, color: Colors.yellow),
+                              Icon(Icons.star, color: Colors.yellow),
+                              Icon(Icons.star, color: Colors.yellow),
+                            ],
+                          ),
+                          const Text('Hard', style: TextStyle(fontSize: 20)),
+                          const Text('    3XP  / answer    '),
+                          Radio(
+                            value: 'hard',
+                            groupValue: _difficulty,
+                            onChanged: (value) {
+                              setState(() {
+                                _difficulty = value.toString();
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
             if (_current_setting == 2) ...[
               const Text('Question type:'),
-              Slider(
+              /*Slider(
                 value: _questionType == 'boolean'
                     ? 0
                     : _questionType == 'multiple'
@@ -95,6 +176,110 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                             : '';
                   });
                 },
+              ),*/
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: SizedBox(
+                      width: 140,
+                      child: Card(
+                        child: Column(
+                          children: [
+                            const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Icon(Icons.check_box_outlined,
+                                    color: Colors.green, size: 40),
+                                Icon(Icons.check_box_outline_blank_outlined,
+                                    color: Colors.red, size: 40),
+                                Icon(Icons.check_box_outline_blank_outlined,
+                                    color: Colors.red, size: 40),
+                              ],
+                            ),
+                            const Text('Multiple Choice',
+                                style: TextStyle(fontSize: 18)),
+                            Radio(
+                              value: 'multiple',
+                              groupValue: _questionType,
+                              onChanged: (value) {
+                                setState(() {
+                                  _questionType = value.toString();
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: SizedBox(
+                      width: 140,
+                      child: Card(
+                        child: Column(
+                          children: [
+                            const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Icon(
+                                  Icons.check_circle,
+                                  color: Colors.green,
+                                  size: 40,
+                                ),
+                                Icon(
+                                  Icons.cancel,
+                                  color: Colors.red,
+                                  size: 40,
+                                ),
+                              ],
+                            ),
+                            const Text('True/False',
+                                style: TextStyle(fontSize: 18)),
+                            Radio(
+                              value: 'boolean',
+                              groupValue: _questionType,
+                              onChanged: (value) {
+                                setState(() {
+                                  _questionType = value.toString();
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: SizedBox(
+                      width: 140,
+                      child: Card(
+                        child: Column(
+                          children: [
+                            const Icon(
+                              Icons.shuffle, // Icons.casino_outlined
+                              size: 40,
+                            ),
+                            const Text('Both types',
+                                style: TextStyle(fontSize: 18)),
+                            Radio(
+                              value: '',
+                              groupValue: _questionType,
+                              onChanged: (value) {
+                                setState(() {
+                                  _questionType = value.toString();
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
             ElevatedButton(
@@ -105,6 +290,10 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return QuizPage(
                       categoryId: widget.categoryId,
+                      categoryName: widget.categoryName,
+                      numOfQuestions: _numOfQuestions,
+                      difficulty: _difficulty,
+                      questionType: _questionType,
                     );
                   }));
                 } else {

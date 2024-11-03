@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Triviology',
       theme: ThemeData(
-          colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.green)),
+          colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.purple)),
       darkTheme: ThemeData.dark(),
       home: const NavigationWidget(),
       debugShowCheckedModeBanner: false,
