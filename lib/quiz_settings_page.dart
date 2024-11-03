@@ -263,10 +263,10 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                               Icons.shuffle, // Icons.casino_outlined
                               size: 40,
                             ),
-                            const Text('Both types',
+                            const Text('Any type',
                                 style: TextStyle(fontSize: 18)),
                             Radio(
-                              value: '',
+                              value: 'any',
                               groupValue: _questionType,
                               onChanged: (value) {
                                 setState(() {
