@@ -25,16 +25,10 @@ class QuizPage extends StatefulWidget {
 class _QuizPageState extends State<QuizPage> {
   int _currentQuestion = 0;
   int _earnedExperience = 0;
-  final String _currentQuestionType =
-      'multiple'; // TODO: check if it is even needed
-  List<dynamic> _currentQuestionAnswers = [
-    'Italy',
-    'Paris',
-    'Warsaw',
-    'I dont know I am from USA'
-  ];
+  int _correctlyAnsweredQuestions = 0;
+  List<dynamic> _currentQuestionAnswers = ['...', '...', '...', '...'];
   String _currentQuestionCorrectAnswer = 'Paris';
-  String _currentQuestionBody = 'What is the capital of France?';
+  String _currentQuestionBody = 'loading...';
   // example JSON from API call to Open Trivia DB
   Map<String, dynamic>?
       _decodedJson; /*jsonDecode(
@@ -137,15 +131,13 @@ class _QuizPageState extends State<QuizPage> {
     if (_decodedJson == null) {
       _fetchQuestions();
     } else {
-      setState(() {
-        _currentQuestionBody =
-            _decodedJson?['results'][_currentQuestion]['question'];
-        _currentQuestionAnswers = _decodedJson?['results'][_currentQuestion]
-                ['incorrect_answers'] +
-            [_decodedJson?['results'][_currentQuestion]['correct_answer']];
-        _currentQuestionCorrectAnswer =
-            _decodedJson?['results'][_currentQuestion]['correct_answer'];
-      });
+      _currentQuestionBody =
+          _decodedJson?['results'][_currentQuestion]['question'];
+      _currentQuestionAnswers = _decodedJson?['results'][_currentQuestion]
+              ['incorrect_answers'] +
+          [_decodedJson?['results'][_currentQuestion]['correct_answer']];
+      _currentQuestionCorrectAnswer =
+          _decodedJson?['results'][_currentQuestion]['correct_answer'];
     }
     // I have NO IDEA how to add loading screen here, but I need to do something about the delay in fetching the questions
     // TODO: add loading screen
@@ -229,7 +221,8 @@ class _QuizPageState extends State<QuizPage> {
                       //print('Answer tapped: ${_currentQuestionAnswers[index]}');
                       Future.delayed(const Duration(milliseconds: 600), () {
                         setState(() {
-                          _currentQuestion++;
+                          if (mounted)
+                            _currentQuestion++; //checking if mounted because I managed to break it by tapping too fast xd
                         });
                       });
                       if (_currentQuestionAnswers[index] ==
@@ -241,15 +234,22 @@ class _QuizPageState extends State<QuizPage> {
                               : widget.difficulty == 'medium'
                                   ? 2
                                   : 3;
+                          _correctlyAnsweredQuestions++;
                         });
                       } else {
                         //print('Wrong answer!');
                       }
                       if (_currentQuestion == widget.numOfQuestions - 1) {
-                        Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                                builder: (context) => const QuizSummaryPage()),
-                            (route) => false);
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => QuizSummaryPage(
+                                  categoryName: widget.categoryName,
+                                  numOfQuestions: widget.numOfQuestions,
+                                  difficulty: widget.difficulty,
+                                  questionType: widget.questionType,
+                                  earnedExperience: _earnedExperience,
+                                  correctlyAnsweredQuestions:
+                                      _correctlyAnsweredQuestions,
+                                )));
                       }
                     },
                     customBorder: RoundedRectangleBorder(
