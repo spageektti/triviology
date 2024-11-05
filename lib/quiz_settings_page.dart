@@ -74,77 +74,91 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Card(
-                      child: Column(
-                        children: [
-                          const Icon(Icons.star, color: Colors.yellow),
-                          const Text('Easy', style: TextStyle(fontSize: 20)),
-                          const Text('    1XP  / answer    '),
-                          Radio(
-                            value: 'easy',
-                            groupValue: _difficulty,
-                            onChanged: (value) {
-                              setState(() {
-                                _difficulty = value.toString();
-                              });
-                            },
-                          ),
-                        ],
+                  SizedBox(
+                    height: 150,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Card(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const Text('Easy', style: TextStyle(fontSize: 20)),
+                            const Icon(Icons.star_rounded,
+                                color: Colors.yellow),
+                            const Text('    1XP  / answer    '),
+                            Radio(
+                              value: 'easy',
+                              groupValue: _difficulty,
+                              onChanged: (value) {
+                                setState(() {
+                                  _difficulty = value.toString();
+                                });
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Card(
-                      child: Column(
-                        children: [
-                          const Row(
-                            children: [
-                              Icon(Icons.star, color: Colors.yellow),
-                              Icon(Icons.star, color: Colors.yellow),
-                            ],
-                          ),
-                          const Text('Medium', style: TextStyle(fontSize: 20)),
-                          const Text('    2XP  / answer    '),
-                          Radio(
-                            value: 'medium',
-                            groupValue: _difficulty,
-                            onChanged: (value) {
-                              setState(() {
-                                _difficulty = value.toString();
-                              });
-                            },
-                          ),
-                        ],
+                  SizedBox(
+                    height: 150,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Card(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const Text('Medium',
+                                style: TextStyle(fontSize: 20)),
+                            const Row(
+                              children: [
+                                Icon(Icons.star_rounded, color: Colors.yellow),
+                                Icon(Icons.star_rounded, color: Colors.yellow),
+                              ],
+                            ),
+                            const Text('    2XP  / answer    '),
+                            Radio(
+                              value: 'medium',
+                              groupValue: _difficulty,
+                              onChanged: (value) {
+                                setState(() {
+                                  _difficulty = value.toString();
+                                });
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Card(
-                      child: Column(
-                        children: [
-                          const Row(
-                            children: [
-                              Icon(Icons.star, color: Colors.yellow),
-                              Icon(Icons.star, color: Colors.yellow),
-                              Icon(Icons.star, color: Colors.yellow),
-                            ],
-                          ),
-                          const Text('Hard', style: TextStyle(fontSize: 20)),
-                          const Text('    3XP  / answer    '),
-                          Radio(
-                            value: 'hard',
-                            groupValue: _difficulty,
-                            onChanged: (value) {
-                              setState(() {
-                                _difficulty = value.toString();
-                              });
-                            },
-                          ),
-                        ],
+                  SizedBox(
+                    height: 150,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Card(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const Text('Hard', style: TextStyle(fontSize: 20)),
+                            const Row(
+                              children: [
+                                Icon(Icons.star_rounded, color: Colors.yellow),
+                                Icon(Icons.star_rounded, color: Colors.yellow),
+                                Icon(Icons.star_rounded, color: Colors.yellow),
+                              ],
+                            ),
+                            const Text('    3XP  / answer    '),
+                            Radio(
+                              value: 'hard',
+                              groupValue: _difficulty,
+                              onChanged: (value) {
+                                setState(() {
+                                  _difficulty = value.toString();
+                                });
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
