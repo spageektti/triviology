@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:triviology/quiz_summary_page.dart';
 import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class QuizPage extends StatefulWidget {
   const QuizPage(
@@ -33,8 +35,10 @@ class _QuizPageState extends State<QuizPage> {
   ];
   String _currentQuestionCorrectAnswer = 'Paris';
   String _currentQuestionBody = 'What is the capital of France?';
-  final String _jsonFromAPI = '{}';
-  final Map<String, dynamic> _decodedJson = jsonDecode('''{
+  // example JSON from API call to Open Trivia DB
+  Map<String, dynamic>?
+      _decodedJson; /*jsonDecode(
+      '');*/ /*'''{
   "response_code": 0,
   "results": [
     {
@@ -95,19 +99,57 @@ class _QuizPageState extends State<QuizPage> {
     }
   ]
 }
-''');
+''');*/
+  // !there is probably a bug somewhere in this code, because some categories return errors
+  // TODO: read API docs to learn what these errors mean and how to handle them
+  Future<void> _fetchQuestions() async {
+    String url =
+        "https://opentdb.com/api.php?amount=${widget.numOfQuestions}&category=${widget.categoryId}&difficulty=${widget.difficulty}";
+    if (widget.questionType != 'any') {
+      url +=
+          '&type=${widget.questionType}'; // Fixed the typo from \$type to &type
+    }
+
+    try {
+      http.Response response = await http.get(Uri.parse(url));
+      //print(response.body); // - do not uncomment unless needed - it will spam your console - actually I am writing it to my self because I dont think anyone else will ever read this - I actually enjoy writing comments xd
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> decodedJson = jsonDecode(response.body);
+
+        if (decodedJson['response_code'] == 0) {
+          setState(() {
+            _decodedJson = decodedJson;
+          });
+        } else {
+          print('Error: Response code ${decodedJson['response_code']}');
+        }
+      } else {
+        print('Failed to load data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error occurred: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      _currentQuestionBody =
-          _decodedJson['results'][_currentQuestion]['question'];
-      _currentQuestionAnswers = _decodedJson['results'][_currentQuestion]
-              ['incorrect_answers'] +
-          [_decodedJson['results'][_currentQuestion]['correct_answer']];
-      _currentQuestionCorrectAnswer =
-          _decodedJson['results'][_currentQuestion]['correct_answer'];
-    });
+    if (_decodedJson == null) {
+      _fetchQuestions();
+    } else {
+      setState(() {
+        _currentQuestionBody =
+            _decodedJson?['results'][_currentQuestion]['question'];
+        _currentQuestionAnswers = _decodedJson?['results'][_currentQuestion]
+                ['incorrect_answers'] +
+            [_decodedJson?['results'][_currentQuestion]['correct_answer']];
+        _currentQuestionCorrectAnswer =
+            _decodedJson?['results'][_currentQuestion]['correct_answer'];
+      });
+    }
+    // I have NO IDEA how to add loading screen here, but I need to do something about the delay in fetching the questions
+    // TODO: add loading screen
+    // I am actually gonna create a github issue for this so I dont forget about it
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.categoryName),
@@ -202,6 +244,12 @@ class _QuizPageState extends State<QuizPage> {
                         });
                       } else {
                         //print('Wrong answer!');
+                      }
+                      if (_currentQuestion == widget.numOfQuestions - 1) {
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                                builder: (context) => const QuizSummaryPage()),
+                            (route) => false);
                       }
                     },
                     customBorder: RoundedRectangleBorder(
