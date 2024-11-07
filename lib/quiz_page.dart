@@ -27,7 +27,8 @@ class _QuizPageState extends State<QuizPage> {
   int _earnedExperience = 0;
   int _correctlyAnsweredQuestions = 0;
   List<dynamic> _currentQuestionAnswers = ['...', '...', '...', '...'];
-  String _currentQuestionCorrectAnswer = 'Paris';
+  String _currentQuestionCorrectAnswer = '...';
+  final bool _clickable = false;
   String _currentQuestionBody = 'loading...';
   // example JSON from API call to Open Trivia DB
   Map<String, dynamic>?
@@ -95,6 +96,7 @@ class _QuizPageState extends State<QuizPage> {
 }
 ''');*/
   // !there is probably a bug somewhere in this code, because some categories return errors
+  // it is actually probably because there are less questions in some categories/difficulty combinations than the number of questions requested
   // TODO: read API docs to learn what these errors mean and how to handle them
   Future<void> _fetchQuestions() async {
     String url =
@@ -115,6 +117,29 @@ class _QuizPageState extends State<QuizPage> {
           setState(() {
             _decodedJson = decodedJson;
           });
+        } else if (decodedJson['response_code'] == 1) {
+          if (mounted) {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: const Text('Error'),
+                  content: const Text(
+                      'There are not enough questions in the category/diffulty combination you selected. Please try again with different settings, or change the questions source.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        //navigate to home page ( navigator widghet) without preserving history
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            '/', (Route<dynamic> route) => false);
+                      },
+                      child: const Text('OK'),
+                    ),
+                  ],
+                );
+              },
+            );
+          }
         } else {
           print('Error: Response code ${decodedJson['response_code']}');
         }
@@ -130,12 +155,15 @@ class _QuizPageState extends State<QuizPage> {
   Widget build(BuildContext context) {
     if (_decodedJson == null) {
       _fetchQuestions();
-    } else {
+    } else if (_currentQuestion < _decodedJson?['results'].length) {
       _currentQuestionBody =
           _decodedJson?['results'][_currentQuestion]['question'];
       _currentQuestionAnswers = _decodedJson?['results'][_currentQuestion]
               ['incorrect_answers'] +
           [_decodedJson?['results'][_currentQuestion]['correct_answer']];
+      //_currentQuestionAnswers
+      //    .shuffle(); // !you can remove this for testing so you know which answer is the correct one, but do not forget to add it back!!
+// ! it actually doesnt work perfectly cuz sometimes it shuffles while it shouldnt cuz it does so every time the widget rebuilds
       _currentQuestionCorrectAnswer =
           _decodedJson?['results'][_currentQuestion]['correct_answer'];
     }
@@ -212,12 +240,13 @@ class _QuizPageState extends State<QuizPage> {
                 );*/
                 return Card(
                   child: InkWell(
+                    highlightColor: Colors.amber,
                     splashColor: _currentQuestionAnswers[index] ==
                             _currentQuestionCorrectAnswer
                         ? Colors.green.withAlpha(30)
                         : Colors.red.withAlpha(30),
                     onTapDown: (details) {
-                      // changed from onTap to onTapDown to prevent cheating by canceling the tap
+                      // changed from onTap to onTapDown toprevent cheating by canceling the tap
                       //print('Answer tapped: ${_currentQuestionAnswers[index]}');
                       Future.delayed(const Duration(milliseconds: 600), () {
                         setState(() {
