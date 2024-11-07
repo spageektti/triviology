@@ -266,8 +266,8 @@ class _QuizPageState extends State<QuizPage> {
                   color: _showCardColor
                       ? _currentQuestionAnswers[index] ==
                               _currentQuestionCorrectAnswer
-                          ? Colors.green.withAlpha(30)
-                          : Colors.red.withAlpha(30)
+                          ? Colors.green.withAlpha(40)
+                          : Colors.red.withAlpha(40)
                       : Theme.of(context)
                           .cardTheme
                           .color, // Theme.of(context).cardColor is different from Theme.of(context).cardTheme.color, it is equal to the background color of the scaffold, so we need to use cardTheme.color
@@ -280,7 +280,7 @@ class _QuizPageState extends State<QuizPage> {
                       if (_clickable) {
                         // changed from onTap to onTapDown toprevent cheating by canceling the tap
                         //print('Answer tapped: ${_currentQuestionAnswers[index]}');
-                        Future.delayed(const Duration(milliseconds: 600), () {
+                        Future.delayed(const Duration(milliseconds: 400), () {
                           setState(() {
                             _clickable = true;
                             _showCardColor = true;
@@ -314,7 +314,7 @@ class _QuizPageState extends State<QuizPage> {
                         }
                         if (_currentQuestion == widget.numOfQuestions - 1) {
                           if (mounted) {
-                            Future.delayed(const Duration(milliseconds: 1600),
+                            Future.delayed(const Duration(milliseconds: 1500),
                                 () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => QuizSummaryPage(
