@@ -28,8 +28,11 @@ class _QuizPageState extends State<QuizPage> {
   int _correctlyAnsweredQuestions = 0;
   List<dynamic> _currentQuestionAnswers = ['...', '...', '...', '...'];
   String _currentQuestionCorrectAnswer = '...';
-  final bool _clickable = false;
+  bool _clickable = false;
   String _currentQuestionBody = 'loading...';
+  List<List<dynamic>> _answersForAll = [];
+  bool _showCardColor = false;
+
   // example JSON from API call to Open Trivia DB
   Map<String, dynamic>?
       _decodedJson; /*jsonDecode(
@@ -116,6 +119,14 @@ class _QuizPageState extends State<QuizPage> {
         if (decodedJson['response_code'] == 0) {
           setState(() {
             _decodedJson = decodedJson;
+            _answersForAll =
+                decodedJson['results'].map<List<dynamic>>((question) {
+              List<dynamic> answers =
+                  question['incorrect_answers'] + [question['correct_answer']];
+              answers.shuffle();
+              return answers;
+            }).toList();
+            _clickable = true;
           });
         } else if (decodedJson['response_code'] == 1) {
           if (mounted) {
@@ -135,6 +146,12 @@ class _QuizPageState extends State<QuizPage> {
                       },
                       child: const Text('OK'),
                     ),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              '/settings', (Route<dynamic> route) => false);
+                        },
+                        child: const Text('Settings'))
                   ],
                 );
               },
@@ -155,12 +172,11 @@ class _QuizPageState extends State<QuizPage> {
   Widget build(BuildContext context) {
     if (_decodedJson == null) {
       _fetchQuestions();
+      // convert json to the _answersFormAll list and shuffle it
     } else if (_currentQuestion < _decodedJson?['results'].length) {
       _currentQuestionBody =
           _decodedJson?['results'][_currentQuestion]['question'];
-      _currentQuestionAnswers = _decodedJson?['results'][_currentQuestion]
-              ['incorrect_answers'] +
-          [_decodedJson?['results'][_currentQuestion]['correct_answer']];
+      _currentQuestionAnswers = _answersForAll[_currentQuestion];
       //_currentQuestionAnswers
       //    .shuffle(); // !you can remove this for testing so you know which answer is the correct one, but do not forget to add it back!!
 // ! it actually doesnt work perfectly cuz sometimes it shuffles while it shouldnt cuz it does so every time the widget rebuilds
@@ -239,46 +255,72 @@ class _QuizPageState extends State<QuizPage> {
                   ),
                 );*/
                 return Card(
+                  color: _showCardColor
+                      ? _currentQuestionAnswers[index] ==
+                              _currentQuestionCorrectAnswer
+                          ? Colors.green.withAlpha(30)
+                          : Colors.red.withAlpha(30)
+                      : Theme.of(context)
+                          .cardTheme
+                          .color, // Theme.of(context).cardColor is different from Theme.of(context).cardTheme.color, it is equal to the background color of the scaffold, so we need to use cardTheme.color
                   child: InkWell(
-                    highlightColor: Colors.amber,
                     splashColor: _currentQuestionAnswers[index] ==
                             _currentQuestionCorrectAnswer
                         ? Colors.green.withAlpha(30)
                         : Colors.red.withAlpha(30),
                     onTapDown: (details) {
-                      // changed from onTap to onTapDown toprevent cheating by canceling the tap
-                      //print('Answer tapped: ${_currentQuestionAnswers[index]}');
-                      Future.delayed(const Duration(milliseconds: 600), () {
-                        setState(() {
-                          if (mounted)
-                            _currentQuestion++; //checking if mounted because I managed to break it by tapping too fast xd
+                      if (_clickable) {
+                        // changed from onTap to onTapDown toprevent cheating by canceling the tap
+                        //print('Answer tapped: ${_currentQuestionAnswers[index]}');
+                        Future.delayed(const Duration(milliseconds: 600), () {
+                          setState(() {
+                            _clickable = true;
+                            _showCardColor = true;
+                          });
+                          Future.delayed(const Duration(milliseconds: 1000),
+                              () {
+                            setState(() {
+                              {
+                                _showCardColor = false;
+                                _currentQuestion++;
+                              }
+                            });
+                          });
                         });
-                      });
-                      if (_currentQuestionAnswers[index] ==
-                          _currentQuestionCorrectAnswer) {
-                        //print('Correct answer!');
                         setState(() {
-                          _earnedExperience += widget.difficulty == 'easy'
-                              ? 1
-                              : widget.difficulty == 'medium'
-                                  ? 2
-                                  : 3;
-                          _correctlyAnsweredQuestions++;
+                          _clickable = false;
                         });
-                      } else {
-                        //print('Wrong answer!');
-                      }
-                      if (_currentQuestion == widget.numOfQuestions - 1) {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => QuizSummaryPage(
-                                  categoryName: widget.categoryName,
-                                  numOfQuestions: widget.numOfQuestions,
-                                  difficulty: widget.difficulty,
-                                  questionType: widget.questionType,
-                                  earnedExperience: _earnedExperience,
-                                  correctlyAnsweredQuestions:
-                                      _correctlyAnsweredQuestions,
-                                )));
+                        if (_currentQuestionAnswers[index] ==
+                            _currentQuestionCorrectAnswer) {
+                          //print('Correct answer!');
+                          setState(() {
+                            _earnedExperience += widget.difficulty == 'easy'
+                                ? 1
+                                : widget.difficulty == 'medium'
+                                    ? 2
+                                    : 3;
+                            _correctlyAnsweredQuestions++;
+                          });
+                        } else {
+                          //print('Wrong answer!');
+                        }
+                        if (_currentQuestion == widget.numOfQuestions - 1) {
+                          if (mounted) {
+                            Future.delayed(const Duration(milliseconds: 1600),
+                                () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => QuizSummaryPage(
+                                        categoryName: widget.categoryName,
+                                        numOfQuestions: widget.numOfQuestions,
+                                        difficulty: widget.difficulty,
+                                        questionType: widget.questionType,
+                                        earnedExperience: _earnedExperience,
+                                        correctlyAnsweredQuestions:
+                                            _correctlyAnsweredQuestions,
+                                      )));
+                            });
+                          }
+                        }
                       }
                     },
                     customBorder: RoundedRectangleBorder(
