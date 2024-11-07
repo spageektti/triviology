@@ -10,6 +10,10 @@ class QuizSummaryPage extends StatelessWidget {
     required this.questionType,
     required this.earnedExperience,
     required this.correctlyAnsweredQuestions,
+    required this.databaseName,
+    required this.databaseUrl,
+    required this.databaseCodename,
+    required this.databaseSavefile,
   });
 
   final String categoryName;
@@ -18,6 +22,10 @@ class QuizSummaryPage extends StatelessWidget {
   final String questionType;
   final int earnedExperience;
   final int correctlyAnsweredQuestions;
+  final String databaseName;
+  final String databaseUrl;
+  final String databaseCodename;
+  final String databaseSavefile;
 
   @override
   Widget build(BuildContext context) {
@@ -99,10 +107,16 @@ class QuizSummaryPage extends StatelessWidget {
           child: const Icon(Icons.home),
           onPressed: () {
             print('pressed');
-            Navigator.of(context).pushReplacement(
+            Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
-                builder: (context) => const NavigationWidget(),
+                builder: (context) => NavigationWidget(
+                  databaseName: databaseName,
+                  databaseUrl: databaseUrl,
+                  databaseCodename: databaseCodename,
+                  databaseSavefile: databaseSavefile,
+                ),
               ),
+              (route) => false,
             );
           }),
     );

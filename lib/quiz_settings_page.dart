@@ -3,10 +3,20 @@ import 'package:triviology/quiz_page.dart';
 
 class QuizSettingsPage extends StatefulWidget {
   const QuizSettingsPage(
-      {super.key, required this.categoryId, required this.categoryName});
+      {super.key,
+      required this.categoryId,
+      required this.categoryName,
+      required this.databaseName,
+      required this.databaseUrl,
+      required this.databaseCodename,
+      required this.databaseSavefile});
 
   final int categoryId;
   final String categoryName;
+  final String databaseName;
+  final String databaseUrl;
+  final String databaseCodename;
+  final String databaseSavefile;
 
   @override
   _QuizSettingsPageState createState() => _QuizSettingsPageState();
@@ -308,6 +318,10 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                       numOfQuestions: _numOfQuestions,
                       difficulty: _difficulty,
                       questionType: _questionType,
+                      databaseName: widget.databaseName,
+                      databaseUrl: widget.databaseUrl,
+                      databaseCodename: widget.databaseCodename,
+                      databaseSavefile: widget.databaseSavefile,
                     );
                   }));
                 } else {

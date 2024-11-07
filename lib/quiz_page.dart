@@ -10,13 +10,21 @@ class QuizPage extends StatefulWidget {
       required this.categoryName,
       required this.numOfQuestions,
       required this.difficulty,
-      required this.questionType});
+      required this.questionType,
+      required this.databaseName,
+      required this.databaseUrl,
+      required this.databaseCodename,
+      required this.databaseSavefile});
 
   final int categoryId;
   final String categoryName;
   final int numOfQuestions;
   final String difficulty;
   final String questionType;
+  final String databaseName;
+  final String databaseUrl;
+  final String databaseCodename;
+  final String databaseSavefile;
 
   @override
   _QuizPageState createState() => _QuizPageState();
@@ -317,6 +325,12 @@ class _QuizPageState extends State<QuizPage> {
                                         earnedExperience: _earnedExperience,
                                         correctlyAnsweredQuestions:
                                             _correctlyAnsweredQuestions,
+                                        databaseName: widget.databaseName,
+                                        databaseUrl: widget.databaseUrl,
+                                        databaseCodename:
+                                            widget.databaseCodename,
+                                        databaseSavefile:
+                                            widget.databaseSavefile,
                                       )));
                             });
                           }

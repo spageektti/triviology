@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:triviology/quiz_settings_page.dart';
+import 'dart:convert';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 
 final List<Map<String, dynamic>> categories = [
   {'icon': Icons.question_answer, 'text': 'General Knowledge', 'id': 9},
@@ -29,7 +32,17 @@ final List<Map<String, dynamic>> categories = [
 ];
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  const HomePage(
+      {super.key,
+      required this.databaseName,
+      required this.databaseUrl,
+      required this.databaseCodename,
+      required this.databaseSavefile});
+
+  final String databaseName;
+  final String databaseUrl;
+  final String databaseCodename;
+  final String databaseSavefile;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +53,39 @@ class HomePage extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.info_outline_rounded),
             onPressed: () {
-              print('Info button tapped.');
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Information'),
+                    content: Column(
+                      children: [
+                        const Text(
+                            'App made with love by Wiktor Perskawiec (@spageektti)'),
+                        const Text(
+                            'The app\'s source code is available on GitHub'),
+                        const Text(
+                            'The app is licensed under the GPLv3 License'),
+                        Text('Database used: $databaseName'),
+                      ],
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        child: const Text('OK'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      TextButton(onPressed: () {}, child: const Text('GitHub')),
+                      TextButton(
+                          onPressed: () {},
+                          child: const Text('License (GPLv3)')),
+                      TextButton(
+                          onPressed: () {}, child: const Text('Database')),
+                    ],
+                  );
+                },
+              );
             },
           ),
         ],
@@ -63,7 +108,11 @@ class HomePage extends StatelessWidget {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return QuizSettingsPage(
                       categoryId: category['id'],
-                      categoryName: category['text']);
+                      categoryName: category['text'],
+                      databaseName: databaseName,
+                      databaseUrl: databaseUrl,
+                      databaseCodename: databaseCodename,
+                      databaseSavefile: databaseSavefile);
                 }));
               },
               customBorder: RoundedRectangleBorder(

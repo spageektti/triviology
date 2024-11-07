@@ -3,7 +3,17 @@ import 'package:triviology/home_page.dart';
 import 'package:triviology/stats_page.dart';
 
 class NavigationWidget extends StatefulWidget {
-  const NavigationWidget({super.key});
+  const NavigationWidget(
+      {super.key,
+      required this.databaseName,
+      required this.databaseUrl,
+      required this.databaseCodename,
+      required this.databaseSavefile});
+
+  final String databaseName;
+  final String databaseUrl;
+  final String databaseCodename;
+  final String databaseSavefile;
 
   @override
   _NavigationWidgetState createState() => _NavigationWidgetState();
@@ -13,10 +23,21 @@ class _NavigationWidgetState extends State<NavigationWidget> {
   int _selectedIndex = 0;
   final PageController _pageController = PageController();
 
-  static const List<Widget> _pages = <Widget>[
-    HomePage(),
-    StatsPage(),
-  ];
+  late List<Widget> _pages;
+
+  @override
+  void initState() {
+    super.initState();
+    _pages = <Widget>[
+      HomePage(
+        databaseName: widget.databaseName,
+        databaseUrl: widget.databaseUrl,
+        databaseCodename: widget.databaseCodename,
+        databaseSavefile: widget.databaseSavefile,
+      ),
+      const StatsPage(),
+    ];
+  }
 
   void _onItemTapped(int index) {
     setState(() {
