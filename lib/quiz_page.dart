@@ -1,7 +1,29 @@
+/*
+* Triviology - a fun and challenging trivia app to test your knowledge on various topics.
+* Copyright (C) 2024  Wiktor Perskawiec <contact@spageektti.cc>
+
+? This program is free software: you can redistribute it and/or modify
+? it under the terms of the GNU General Public License as published by
+? the Free Software Foundation, either version 3 of the License, or
+? (at your option) any later version.
+
+! This program is distributed in the hope that it will be useful,
+! but WITHOUT ANY WARRANTY; without even the implied warranty of
+! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+! GNU General Public License for more details.
+
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+/* 
+! To contribute, please read the CONTRIBUTING.md file in the root of the project.
+? It contains important information about the project structure, code style, suggested VSCode extensions, and more.
+*/
 import 'package:flutter/material.dart';
 import 'package:triviology/quiz_summary_page.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:html/parser.dart' as htmlParser;
 
 class QuizPage extends StatefulWidget {
   const QuizPage(
@@ -113,13 +135,11 @@ class _QuizPageState extends State<QuizPage> {
     String url =
         "https://opentdb.com/api.php?amount=${widget.numOfQuestions}&category=${widget.categoryId}&difficulty=${widget.difficulty}";
     if (widget.questionType != 'any') {
-      url +=
-          '&type=${widget.questionType}'; // Fixed the typo from \$type to &type
+      url += '&type=${widget.questionType}';
     }
 
     try {
       http.Response response = await http.get(Uri.parse(url));
-      //print(response.body); // - do not uncomment unless needed - it will spam your console - actually I am writing it to my self because I dont think anyone else will ever read this - I actually enjoy writing comments xd
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> decodedJson = jsonDecode(response.body);
@@ -132,8 +152,16 @@ class _QuizPageState extends State<QuizPage> {
               List<dynamic> answers =
                   question['incorrect_answers'] + [question['correct_answer']];
               answers.shuffle();
-              return answers;
+              return answers
+                  .map((answer) =>
+                      htmlParser.parse(answer).documentElement?.text)
+                  .toList();
             }).toList();
+            _currentQuestionBody = htmlParser
+                    .parse(decodedJson['results'][_currentQuestion]['question'])
+                    .documentElement
+                    ?.text ??
+                'loading...'; // Decode question
             _clickable = true;
           });
         } else if (decodedJson['response_code'] == 1) {
@@ -144,22 +172,22 @@ class _QuizPageState extends State<QuizPage> {
                 return AlertDialog(
                   title: const Text('Error'),
                   content: const Text(
-                      'There are not enough questions in the category/diffulty combination you selected. Please try again with different settings, or change the questions source.'),
+                      'There are not enough questions in the category/difficulty combination you selected. Please try again with different settings, or change the questions source.'),
                   actions: [
                     TextButton(
                       onPressed: () {
-                        //navigate to home page ( navigator widghet) without preserving history
                         Navigator.of(context).pushNamedAndRemoveUntil(
                             '/', (Route<dynamic> route) => false);
                       },
                       child: const Text('OK'),
                     ),
                     TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                              '/settings', (Route<dynamic> route) => false);
-                        },
-                        child: const Text('Settings'))
+                      onPressed: () {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            '/settings', (Route<dynamic> route) => false);
+                      },
+                      child: const Text('Settings'),
+                    ),
                   ],
                 );
               },
@@ -180,16 +208,19 @@ class _QuizPageState extends State<QuizPage> {
   Widget build(BuildContext context) {
     if (_decodedJson == null) {
       _fetchQuestions();
-      // convert json to the _answersFormAll list and shuffle it
     } else if (_currentQuestion < _decodedJson?['results'].length) {
-      _currentQuestionBody =
-          _decodedJson?['results'][_currentQuestion]['question'];
+      _currentQuestionBody = htmlParser
+              .parse(_decodedJson?['results'][_currentQuestion]['question'])
+              .documentElement
+              ?.text ??
+          'loading...';
       _currentQuestionAnswers = _answersForAll[_currentQuestion];
-      //_currentQuestionAnswers
-      //    .shuffle(); // !you can remove this for testing so you know which answer is the correct one, but do not forget to add it back!!
-// ! it actually doesnt work perfectly cuz sometimes it shuffles while it shouldnt cuz it does so every time the widget rebuilds
-      _currentQuestionCorrectAnswer =
-          _decodedJson?['results'][_currentQuestion]['correct_answer'];
+      _currentQuestionCorrectAnswer = htmlParser
+              .parse(
+                  _decodedJson?['results'][_currentQuestion]['correct_answer'])
+              .documentElement
+              ?.text ??
+          '...';
     }
     // I have NO IDEA how to add loading screen here, but I need to do something about the delay in fetching the questions
     // TODO: add loading screen
@@ -319,6 +350,7 @@ class _QuizPageState extends State<QuizPage> {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => QuizSummaryPage(
                                         categoryName: widget.categoryName,
+                                        categoryId: widget.categoryId,
                                         numOfQuestions: widget.numOfQuestions,
                                         difficulty: widget.difficulty,
                                         questionType: widget.questionType,
