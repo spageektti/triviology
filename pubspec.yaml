@@ -94,5 +94,5 @@ flutter:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/triviology-temp-logo.png"
+  image_path: "assets/triviology.png"
   remove_alpha_ios: true

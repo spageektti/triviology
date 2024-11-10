@@ -21,9 +21,6 @@
 */
 import 'package:flutter/material.dart';
 import 'package:triviology/quiz_settings_page.dart';
-import 'dart:convert';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
 
 final List<Map<String, dynamic>> categories = [
   {'icon': Icons.question_answer, 'text': 'General Knowledge', 'id': 9},
