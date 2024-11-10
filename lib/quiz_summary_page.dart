@@ -84,24 +84,45 @@ Future<void> saveData(totalQuestions, correctAnswers, experience, categoryIdint,
     await saveFile.writeAsString(jsonEncode({
       databaseSavefile: {
         categoryId: {
-          'easy': {
-            'totalquestions': totalQuestions,
-            'correctanswers': correctAnswers,
-            'experience': experience,
-            'totalquizzes': 1
-          },
-          'medium': {
-            'totalquestions': 0,
-            'correctanswers': 0,
-            'experience': 0,
-            'totalquizzes': 0
-          },
-          'hard': {
-            'totalquestions': 0,
-            'correctanswers': 0,
-            'experience': 0,
-            'totalquizzes': 0
-          },
+          'easy': difficultyLevel == 'easy'
+              ? {
+                  'totalquestions': totalQuestions,
+                  'correctanswers': correctAnswers,
+                  'experience': experience,
+                  'totalquizzes': 1
+                }
+              : {
+                  'totalquestions': 0,
+                  'correctanswers': 0,
+                  'experience': 0,
+                  'totalquizzes': 0
+                },
+          'medium': difficultyLevel == 'medium'
+              ? {
+                  'totalquestions': totalQuestions,
+                  'correctanswers': correctAnswers,
+                  'experience': experience,
+                  'totalquizzes': 1
+                }
+              : {
+                  'totalquestions': 0,
+                  'correctanswers': 0,
+                  'experience': 0,
+                  'totalquizzes': 0
+                },
+          'hard': difficultyLevel == 'hard'
+              ? {
+                  'totalquestions': totalQuestions,
+                  'correctanswers': correctAnswers,
+                  'experience': experience,
+                  'totalquizzes': 1
+                }
+              : {
+                  'totalquestions': 0,
+                  'correctanswers': 0,
+                  'experience': 0,
+                  'totalquizzes': 0
+                },
         }
       }
     }));

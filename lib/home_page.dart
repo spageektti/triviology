@@ -44,7 +44,7 @@ final List<Map<String, dynamic>> categories = [
   {'icon': Icons.pets, 'text': 'Animals', 'id': 27},
   {'icon': Icons.directions_car, 'text': 'Vehicles', 'id': 28},
   {'icon': Icons.my_library_books, 'text': 'Comics', 'id': 29},
-  {'icon': Icons.devices_other, 'text': 'Gadgets', 'id': 10},
+  {'icon': Icons.devices_other, 'text': 'Gadgets', 'id': 30},
   {'icon': Icons.face, 'text': 'Japanese Anime & Manga', 'id': 31},
   {'icon': Icons.animation, 'text': 'Cartoon & Animations', 'id': 32},
 ];
