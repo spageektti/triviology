@@ -91,8 +91,8 @@ class _NavigationWidgetState extends State<NavigationWidget> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
+            icon: Icon(Icons.insert_chart_outlined_rounded),
+            label: 'Stats',
           ),
         ],
         currentIndex: _selectedIndex,

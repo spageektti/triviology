@@ -20,10 +20,11 @@
 ? It contains important information about the project structure, code style, suggested VSCode extensions, and more.
 */
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
+import 'achievements_page.dart';
+import 'dart:math';
 
 final List<Map<String, dynamic>> categories = [
   {'icon': Icons.question_answer, 'text': 'General Knowledge', 'id': 9},
@@ -82,6 +83,9 @@ class _StatsPageState extends State<StatsPage> {
   int _hardTotal = 0;
   int _hardQuizes = 0;
   int _totalExperience = 0;
+  int _totalCorrect = 0;
+  int _totalQuestions = 0;
+  int _totalQuizes = 0;
 
   Future<void> loadStats() async {
     final statsFile =
@@ -125,8 +129,14 @@ class _StatsPageState extends State<StatsPage> {
           categoryStats['medium']['experience'] +
           categoryStats['hard']['experience'];
       _statsReady = true;
+      _totalCorrect = _easyCorrect + _mediumCorrect + _hardCorrect;
+      _totalQuestions = _easyTotal + _mediumTotal + _hardTotal;
+      _totalQuizes = _easyQuizes + _mediumQuizes + _hardQuizes;
     });
   }
+
+  double logBase(num x, num base) => log(x) / log(base);
+  double log2(num x) => logBase(x, 2);
 
   @override
   Widget build(BuildContext context) {
@@ -163,6 +173,37 @@ class _StatsPageState extends State<StatsPage> {
                 const SizedBox(
                   height: 20,
                 ),
+                Text(
+                    'Level ${_totalExperience == 0 ? 0 : (_totalExperience).floor()}',
+                    style: const TextStyle(fontSize: 18)),
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: SizedBox(
+                        height: 20,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: LinearProgressIndicator(
+                            value:
+                                _easyTotal != 0 ? _easyCorrect / _easyTotal : 0,
+                            backgroundColor: Colors.grey[300],
+                            valueColor: const AlwaysStoppedAnimation<Color>(
+                                Colors.green),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Text(
+                          '${_totalExperience == 0 ? 0 : (_totalExperience / (pow(2, log2(_totalExperience).floor()) * 2) * 100).toStringAsFixed(2)}% of next level ($_totalExperience/${_totalExperience == 0 ? 0 : (pow(2, log2(_totalExperience).floor()) * 2)} XP)'),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
                 Card(
                   child: Column(
                     children: [
@@ -187,7 +228,7 @@ class _StatsPageState extends State<StatsPage> {
                               value: _easyTotal != 0
                                   ? _easyCorrect / _easyTotal
                                   : 0,
-                              backgroundColor: Colors.grey,
+                              backgroundColor: Colors.grey[300],
                               valueColor: const AlwaysStoppedAnimation<Color>(
                                   Colors.green),
                             ),
@@ -229,7 +270,7 @@ class _StatsPageState extends State<StatsPage> {
                               value: _mediumTotal != 0
                                   ? _mediumCorrect / _mediumTotal
                                   : 0,
-                              backgroundColor: Colors.grey,
+                              backgroundColor: Colors.grey[300],
                               valueColor: const AlwaysStoppedAnimation<Color>(
                                   Colors.green),
                             ),
@@ -270,7 +311,7 @@ class _StatsPageState extends State<StatsPage> {
                               value: _hardTotal != 0
                                   ? _hardCorrect / _hardTotal
                                   : 0,
-                              backgroundColor: Colors.grey,
+                              backgroundColor: Colors.grey[300],
                               valueColor: const AlwaysStoppedAnimation<Color>(
                                   Colors.green),
                             ),
@@ -284,11 +325,84 @@ class _StatsPageState extends State<StatsPage> {
                       ),
                     ],
                   ),
-                )
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Card(
+                  child: Column(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 5),
+                        child: Text('Total', style: TextStyle(fontSize: 20)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 5),
+                        child: Text(
+                            '$_totalCorrect/$_totalQuestions questions answered correctly in $_totalQuizes quizzes'),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: SizedBox(
+                          height: 20,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: LinearProgressIndicator(
+                              value: _totalQuestions != 0
+                                  ? _totalCorrect / _totalQuestions
+                                  : 0,
+                              backgroundColor: Colors.grey[300],
+                              valueColor: const AlwaysStoppedAnimation<Color>(
+                                  Colors.green),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5),
+                        child: Text(
+                            '${_totalQuestions != 0 ? (_totalCorrect / _totalQuestions * 100).toStringAsFixed(2) : 0}%'),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
         ]),
       ),
+      floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            if (_statsReady) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AchievementsPage(
+                    easyCorrect: _easyCorrect,
+                    easyTotal: _easyTotal,
+                    easyQuizes: _easyQuizes,
+                    mediumCorrect: _mediumCorrect,
+                    mediumTotal: _mediumTotal,
+                    mediumQuizes: _mediumQuizes,
+                    hardCorrect: _hardCorrect,
+                    hardTotal: _hardTotal,
+                    hardQuizes: _hardQuizes,
+                    totalExperience: _totalExperience,
+                    totalCorrect: _totalCorrect,
+                    totalQuestions: _totalQuestions,
+                    totalQuizes: _totalQuizes,
+                    categoryName: categories.firstWhere((element) =>
+                        element['id'] == _selectedCategory)['text'],
+                    categoryIcon: Icon(categories.firstWhere((element) =>
+                        element['id'] == _selectedCategory)['icon']),
+                  ),
+                ),
+              );
+            }
+          },
+          child: const Icon(
+            Icons.emoji_events_outlined,
+            size: 35,
+          )),
     );
   }
 }
