@@ -41,3 +41,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Adaptive Icons folder, breaking the build
+/android/app/src/main/res/mipmap-anydpi-v26
