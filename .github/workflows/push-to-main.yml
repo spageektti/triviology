@@ -31,7 +31,7 @@ jobs:
           sha1sum app-release.apk > app-release.apk.sha1
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: flutter-apk-artifacts
           path: |
