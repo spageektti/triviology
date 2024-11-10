@@ -57,6 +57,20 @@ Future<void> checkAndCreateSettingsFile() async {
     print('settings.json already exists.');
   }
 
+  // download the default database configuration (opentdbapi)
+  // it fetches the JSON from GitHub
+  final databaseJson = File('${directory.path}/opentdbapi.json');
+
+  if (!await databaseJson.exists()) {
+    const url =
+        "https://raw.githubusercontent.com/triviology/opentdbapi/main/opentdbapi.json";
+    final response = await HttpClient().getUrl(Uri.parse(url));
+    final download = await response.close();
+    await databaseJson
+        .writeAsBytes(await download.expand((element) => element).toList());
+    print('opentdbapi.json downloaded.');
+  }
+
   // check if all neccessary keys are present
   final settingsJson = jsonDecode(await settingsFile.readAsString());
   final defaultSettings = {

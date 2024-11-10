@@ -313,13 +313,13 @@ class _QuizPageState extends State<QuizPage> {
                         //print('Answer tapped: ${_currentQuestionAnswers[index]}');
                         Future.delayed(const Duration(milliseconds: 400), () {
                           setState(() {
-                            _clickable = true;
                             _showCardColor = true;
                           });
                           Future.delayed(const Duration(milliseconds: 1000),
                               () {
                             setState(() {
                               {
+                                _clickable = true;
                                 _showCardColor = false;
                                 _currentQuestion++;
                               }
