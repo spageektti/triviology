@@ -163,35 +163,127 @@ class _StatsPageState extends State<StatsPage> {
                 const SizedBox(
                   height: 20,
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 5),
-                  child: Text('Easy',
-                      style: TextStyle(color: Colors.green, fontSize: 20)),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 5),
-                  child: Text(
-                      '$_easyCorrect/$_easyTotal questions answered correctly in $_easyQuizes quizzes'),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: SizedBox(
-                    height: 20,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: LinearProgressIndicator(
-                        value: _easyTotal != 0 ? _easyCorrect / _easyTotal : 0,
-                        backgroundColor: Colors.grey,
-                        valueColor:
-                            const AlwaysStoppedAnimation<Color>(Colors.green),
+                Card(
+                  child: Column(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 5),
+                        child: Text('Easy',
+                            style:
+                                TextStyle(color: Colors.green, fontSize: 20)),
                       ),
-                    ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 5),
+                        child: Text(
+                            '$_easyCorrect/$_easyTotal questions answered correctly in $_easyQuizes quizzes'),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: SizedBox(
+                          height: 20,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: LinearProgressIndicator(
+                              value: _easyTotal != 0
+                                  ? _easyCorrect / _easyTotal
+                                  : 0,
+                              backgroundColor: Colors.grey,
+                              valueColor: const AlwaysStoppedAnimation<Color>(
+                                  Colors.green),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5),
+                        child: Text(
+                            '${_easyTotal != 0 ? (_easyCorrect / _easyTotal * 100).toStringAsFixed(2) : 0}%'),
+                      ),
+                    ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 5),
-                  child: Text(
-                      '${_easyTotal != 0 ? (_easyCorrect / _easyTotal * 100).toStringAsFixed(2) : 0}%'),
+                const SizedBox(
+                  height: 20,
+                ),
+                Card(
+                  child: Column(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 5),
+                        child: Text('Medium',
+                            style:
+                                TextStyle(color: Colors.yellow, fontSize: 20)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 5),
+                        child: Text(
+                            '$_mediumCorrect/$_mediumTotal questions answered correctly in $_mediumQuizes quizzes'),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: SizedBox(
+                          height: 20,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: LinearProgressIndicator(
+                              value: _mediumTotal != 0
+                                  ? _mediumCorrect / _mediumTotal
+                                  : 0,
+                              backgroundColor: Colors.grey,
+                              valueColor: const AlwaysStoppedAnimation<Color>(
+                                  Colors.green),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5),
+                        child: Text(
+                            '${_mediumTotal != 0 ? (_mediumCorrect / _mediumTotal * 100).toStringAsFixed(2) : 0}%'),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Card(
+                  child: Column(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 5),
+                        child: Text('Hard',
+                            style: TextStyle(color: Colors.red, fontSize: 20)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 5),
+                        child: Text(
+                            '$_hardCorrect/$_hardTotal questions answered correctly in $_hardQuizes quizzes'),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: SizedBox(
+                          height: 20,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: LinearProgressIndicator(
+                              value: _hardTotal != 0
+                                  ? _hardCorrect / _hardTotal
+                                  : 0,
+                              backgroundColor: Colors.grey,
+                              valueColor: const AlwaysStoppedAnimation<Color>(
+                                  Colors.green),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5),
+                        child: Text(
+                            '${_hardTotal != 0 ? (_hardCorrect / _hardTotal * 100).toStringAsFixed(2) : 0}%'),
+                      ),
+                    ],
+                  ),
                 )
               ],
             ),
