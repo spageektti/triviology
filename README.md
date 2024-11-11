@@ -2,6 +2,8 @@
 
 A fun and challenging trivia app to test your knowledge on various topics!
 
+TODO add real readme
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
