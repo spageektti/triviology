@@ -23,6 +23,7 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'dart:convert';
+import 'package:country_flags/country_flags.dart';
 
 class DownloadPage extends StatefulWidget {
   const DownloadPage({super.key});
@@ -78,6 +79,7 @@ final List<DownloadItem> downloadItems = [
 
 class _DownloadPageState extends State<DownloadPage> {
   final List<bool> _isDownloaded = List.filled(downloadItems.length, false);
+  final List<bool> _needsUpdate = List.filled(downloadItems.length, false);
   bool _generatedDownloadStatus = false;
 
   Future<void> generateDownloadStatus() async {
@@ -154,7 +156,17 @@ class _DownloadPageState extends State<DownloadPage> {
                   ? Colors.green
                   : Theme.of(context).listTileTheme.textColor,
               title: Text(downloadItems[index].name),
-              subtitle: Text(downloadItems[index].language),
+              subtitle: Row(
+                children: [
+                  CountryFlag.fromLanguageCode(
+                    downloadItems[index].language,
+                    shape: const RoundedRectangle(3),
+                    width: 18,
+                    height: 12,
+                  ),
+                  Text(' ${downloadItems[index].language}'),
+                ],
+              ),
               trailing: IconButton(
                 icon: const Icon(Icons.info_outline_rounded),
                 onPressed: () {
@@ -179,7 +191,18 @@ class _DownloadPageState extends State<DownloadPage> {
                             Text(
                                 'GitHub: ${downloadItems[index].githubOrg}/${downloadItems[index].githubRepo}'),
                             Text('Version: ${downloadItems[index].version}'),
-                            Text('Language: ${downloadItems[index].language}'),
+                            Row(
+                              children: [
+                                const Text('Language: '),
+                                CountryFlag.fromLanguageCode(
+                                  downloadItems[index].language,
+                                  shape: const RoundedRectangle(4),
+                                  width: 18,
+                                  height: 12,
+                                ),
+                                Text(' ${downloadItems[index].language}'),
+                              ],
+                            ),
                             const SizedBox(
                               height: 8,
                             ),

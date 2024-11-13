@@ -38,6 +38,7 @@ dependencies:
   path_provider: ^2.1.5
   html: ^0.15.5
   flutter_launcher_icons: ^0.14.1
+  country_flags: ^3.0.0
 
 dev_dependencies:
   flutter_test:
