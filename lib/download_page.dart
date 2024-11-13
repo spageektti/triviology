@@ -20,10 +20,12 @@
 ? It contains important information about the project structure, code style, suggested VSCode extensions, and more.
 */
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:country_flags/country_flags.dart';
+import 'package:flutter/foundation.dart';
 
 class DownloadPage extends StatefulWidget {
   const DownloadPage({super.key});
@@ -63,7 +65,7 @@ final List<DownloadItem> downloadItems = [
           'The Open Trivia Database API provides questions for 24 categories, with 3 difficulty levels, and 2 question types (multiple choice and true/false). It requires internet access tho.',
       githubOrg: 'triviology',
       githubRepo: 'opentdbapi',
-      version: 'v1.0.0',
+      version: 'v1.0.1',
       language: 'en',
       copyright: 'CC BY-SA 4.0 opentdb.com'),
   DownloadItem(
@@ -88,8 +90,13 @@ class _DownloadPageState extends State<DownloadPage> {
       final downloadJson =
           File('${directory.path}/${downloadItems[i].githubRepo}.json');
       if (await downloadJson.exists()) {
+        final content = await downloadJson.readAsString();
+        final jsonData = jsonDecode(content);
         setState(() {
           _isDownloaded[i] = true;
+          if (jsonData['version'] != downloadItems[i].version) {
+            _needsUpdate[i] = true;
+          }
         });
       }
     }
@@ -105,12 +112,12 @@ class _DownloadPageState extends State<DownloadPage> {
     final directory = await getApplicationDocumentsDirectory();
     final downloadJson =
         File('${directory.path}/${downloadItems[index].githubRepo}.json');
-    final response = await HttpClient().getUrl(Uri.parse(url));
-    final download = await response.close();
-    if (download.statusCode == 404 ||
-        (await download.transform(utf8.decoder).join()) ==
-            '{"error":"Not Found"}') {
-      //display error dialog
+    final request = await HttpClient().getUrl(Uri.parse(url));
+    final response = await request.close();
+    final downloadContent = await response.transform(utf8.decoder).join();
+    if (response.statusCode == 404 ||
+        (downloadContent) == '{"error":"Not Found"}') {
+      // Display error dialog
       showDialog(
         context: context,
         builder: (context) {
@@ -131,10 +138,11 @@ class _DownloadPageState extends State<DownloadPage> {
       );
       return;
     }
-    downloadJson
-        .writeAsBytes(await download.expand((element) => element).toList());
+    await downloadJson.delete();
+    await downloadJson.writeAsString(downloadContent);
     setState(() {
       _isDownloaded[index] = true;
+      _needsUpdate[index] = false;
     });
   }
 
@@ -153,7 +161,9 @@ class _DownloadPageState extends State<DownloadPage> {
           itemBuilder: (context, index) {
             return ListTile(
               textColor: _isDownloaded[index]
-                  ? Colors.green
+                  ? _needsUpdate[index]
+                      ? Colors.amber
+                      : Colors.green
                   : Theme.of(context).listTileTheme.textColor,
               title: Text(downloadItems[index].name),
               subtitle: Row(
@@ -213,16 +223,24 @@ class _DownloadPageState extends State<DownloadPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              if (_isDownloaded[index] == false &&
+                              if ((_isDownloaded[index] == false ||
+                                      _needsUpdate[index]) &&
                                   _generatedDownloadStatus)
                                 TextButton(
                                     onPressed: () {
                                       downloadItem(index);
                                     },
-                                    child: const Row(
+                                    child: Row(
                                       children: [
-                                        Icon(Icons.download_rounded),
-                                        Text('Download'),
+                                        Icon(_needsUpdate[index]
+                                            ? Icons.system_update_alt_outlined
+                                            : Icons.download_rounded),
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(_needsUpdate[index]
+                                            ? 'Update'
+                                            : 'Download'),
                                       ],
                                     )),
                               TextButton(
