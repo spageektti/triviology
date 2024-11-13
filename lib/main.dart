@@ -58,6 +58,7 @@ Future<void> checkAndCreateSettingsFile() async {
   }
 
   // download the default database configuration (opentdbapi)
+  // TODO: add a check if any other database is installed, if yes do not install this one
   // it fetches the JSON from GitHub
   final databaseJson = File('${directory.path}/opentdbapi.json');
 

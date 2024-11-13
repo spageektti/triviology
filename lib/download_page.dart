@@ -20,12 +20,10 @@
 ? It contains important information about the project structure, code style, suggested VSCode extensions, and more.
 */
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:country_flags/country_flags.dart';
-import 'package:flutter/foundation.dart';
 
 class DownloadPage extends StatefulWidget {
   const DownloadPage({super.key});
@@ -40,6 +38,7 @@ class DownloadItem {
   final String githubOrg;
   final String githubRepo;
   final String language;
+  final String flag;
   final String version;
   final String copyright;
 
@@ -49,6 +48,7 @@ class DownloadItem {
       required this.githubOrg,
       required this.githubRepo,
       required this.language,
+      required this.flag,
       required this.version,
       required this.copyright});
 }
@@ -66,7 +66,8 @@ final List<DownloadItem> downloadItems = [
       githubOrg: 'triviology',
       githubRepo: 'opentdbapi',
       version: 'v1.0.1',
-      language: 'en',
+      language: 'English',
+      flag: 'GB',
       copyright: 'CC BY-SA 4.0 opentdb.com'),
   DownloadItem(
       name: 'Open Trivia Database',
@@ -75,7 +76,38 @@ final List<DownloadItem> downloadItems = [
       githubOrg: 'triviology',
       githubRepo: 'opentdb',
       version: 'v1.0.0',
-      language: 'en',
+      language: 'English',
+      flag: 'GB',
+      copyright: 'CC BY-SA 4.0 opentdb.com'),
+  DownloadItem(
+      name: 'TLDR Pages English',
+      description:
+          'The biggest tldr-pages dataset, asking questions about cli commands. Questions are grouped by platform (Windows, Linux, MacOS, etc.) and saved locally. No internet access needed after download.',
+      githubOrg: 'triviology',
+      githubRepo: 'tldrpages-en',
+      version: 'v1.0.0',
+      language: 'English',
+      flag: 'GB',
+      copyright: 'CC BY-SA 4.0 opentdb.com'),
+  DownloadItem(
+      name: 'TLDR Pages Polish',
+      description:
+          'tldr-pages dataset for the Polish language, asking questions about cli commands. Questions are grouped by platform (Windows, Linux, MacOS, etc.) and saved locally. No internet access needed after download.',
+      githubOrg: 'triviology',
+      githubRepo: 'tldrpages-pl',
+      version: 'v1.0.0',
+      language: 'Polish',
+      flag: 'PL',
+      copyright: 'CC BY-SA 4.0 opentdb.com'),
+  DownloadItem(
+      name: 'TLDR Pages German',
+      description:
+          'tldr-pages dataset for the German language, asking questions about cli commands. Questions are grouped by platform (Windows, Linux, MacOS, etc.) and saved locally. No internet access needed after download.',
+      githubOrg: 'triviology',
+      githubRepo: 'tldrpages-de',
+      version: 'v1.0.0',
+      language: 'German',
+      flag: 'DE',
       copyright: 'CC BY-SA 4.0 opentdb.com'),
 ];
 
@@ -118,32 +150,185 @@ class _DownloadPageState extends State<DownloadPage> {
     if (response.statusCode == 404 ||
         (downloadContent) == '{"error":"Not Found"}') {
       // Display error dialog
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Download Failed'),
-            content: const Text(
-                'Unable to download the file. Please check your internet connection and try again.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text('Download Failed'),
+              content: const Text(
+                  'Unable to download the file. Please check your internet connection and try again.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+
       return;
     }
-    await downloadJson.delete();
+    if (await downloadJson.exists()) {
+      await downloadJson.delete();
+    }
     await downloadJson.writeAsString(downloadContent);
     setState(() {
       _isDownloaded[index] = true;
       _needsUpdate[index] = false;
     });
+    showInfoDialog(index);
+  }
+
+  Future<void> deleteItem(index) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final downloadJson =
+        File('${directory.path}/${downloadItems[index].githubRepo}.json');
+    //check if there is any other database installed based on the _isDownloaded list
+    await downloadJson.delete();
+    if (_isDownloaded.where((element) => element).length == 1) {
+      // Display error dialog
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text('Delete Failed'),
+              content: const Text(
+                  'Unable to delete the file. At least one dataset must be installed. Install another dataset before deleting this one.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+      return;
+    }
+    setState(() {
+      _isDownloaded[index] = false;
+      _needsUpdate[index] = false;
+    });
+    showInfoDialog(index);
+  }
+
+  showInfoDialog(index) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(
+            downloadItems[index].name,
+            style: TextStyle(
+              color: _isDownloaded[index]
+                  ? Colors.green
+                  : Theme.of(context).textTheme.titleLarge?.color,
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(downloadItems[index].description),
+              const SizedBox(height: 16),
+              Text(
+                  'GitHub: ${downloadItems[index].githubOrg}/${downloadItems[index].githubRepo}'),
+              Text('Version: ${downloadItems[index].version}'),
+              Row(
+                children: [
+                  const Text('Language: '),
+                  CountryFlag.fromCountryCode(
+                    downloadItems[index].flag,
+                    shape: const RoundedRectangle(4),
+                    width: 18,
+                    height: 12,
+                  ),
+                  Text(' ${downloadItems[index].language}'),
+                ],
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              Text(downloadItems[index].copyright),
+            ],
+          ),
+          actions: [
+            Wrap(
+              alignment: WrapAlignment.end,
+              direction: Axis.horizontal,
+              spacing: 8.0,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    if (_isDownloaded[index])
+                      TextButton(
+                        onPressed: () {
+                          deleteItem(index);
+                          Navigator.pop(context);
+                        },
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Icon(Icons.delete_forever_rounded),
+                            Text('Delete'),
+                          ],
+                        ),
+                      ),
+                    if ((_isDownloaded[index] == false ||
+                            _needsUpdate[index]) &&
+                        _generatedDownloadStatus)
+                      TextButton(
+                          onPressed: () {
+                            downloadItem(index);
+                            Navigator.pop(context);
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Icon(_needsUpdate[index]
+                                  ? Icons.system_update_alt_outlined
+                                  : Icons.download_rounded),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Text(_needsUpdate[index] ? 'Update' : 'Download'),
+                            ],
+                          )),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Icon(Icons.close_rounded),
+                          Text('Close'),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            )
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -168,8 +353,8 @@ class _DownloadPageState extends State<DownloadPage> {
               title: Text(downloadItems[index].name),
               subtitle: Row(
                 children: [
-                  CountryFlag.fromLanguageCode(
-                    downloadItems[index].language,
+                  CountryFlag.fromCountryCode(
+                    downloadItems[index].flag,
                     shape: const RoundedRectangle(3),
                     width: 18,
                     height: 12,
@@ -180,86 +365,7 @@ class _DownloadPageState extends State<DownloadPage> {
               trailing: IconButton(
                 icon: const Icon(Icons.info_outline_rounded),
                 onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text(
-                          downloadItems[index].name,
-                          style: TextStyle(
-                            color: _isDownloaded[index]
-                                ? Colors.green
-                                : Theme.of(context).textTheme.titleLarge?.color,
-                          ),
-                        ),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(downloadItems[index].description),
-                            const SizedBox(height: 16),
-                            Text(
-                                'GitHub: ${downloadItems[index].githubOrg}/${downloadItems[index].githubRepo}'),
-                            Text('Version: ${downloadItems[index].version}'),
-                            Row(
-                              children: [
-                                const Text('Language: '),
-                                CountryFlag.fromLanguageCode(
-                                  downloadItems[index].language,
-                                  shape: const RoundedRectangle(4),
-                                  width: 18,
-                                  height: 12,
-                                ),
-                                Text(' ${downloadItems[index].language}'),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 8,
-                            ),
-                            Text(downloadItems[index].copyright),
-                          ],
-                        ),
-                        actions: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              if ((_isDownloaded[index] == false ||
-                                      _needsUpdate[index]) &&
-                                  _generatedDownloadStatus)
-                                TextButton(
-                                    onPressed: () {
-                                      downloadItem(index);
-                                    },
-                                    child: Row(
-                                      children: [
-                                        Icon(_needsUpdate[index]
-                                            ? Icons.system_update_alt_outlined
-                                            : Icons.download_rounded),
-                                        const SizedBox(
-                                          width: 5,
-                                        ),
-                                        Text(_needsUpdate[index]
-                                            ? 'Update'
-                                            : 'Download'),
-                                      ],
-                                    )),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: const Row(
-                                  children: [
-                                    Icon(Icons.close_rounded),
-                                    Text('Close'),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          )
-                        ],
-                      );
-                    },
-                  );
+                  showInfoDialog(index);
                 },
               ),
             );
