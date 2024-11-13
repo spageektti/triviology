@@ -63,7 +63,7 @@ Future<void> checkAndCreateSettingsFile() async {
 
   if (!await databaseJson.exists()) {
     const url =
-        "https://raw.githubusercontent.com/triviology/opentdbapi/main/opentdbapi.json";
+        "https://github.com/triviology/opentdbapi/releases/download/v1.0.0/opentdbapi.json";
     final response = await HttpClient().getUrl(Uri.parse(url));
     final download = await response.close();
     await databaseJson

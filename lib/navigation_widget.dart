@@ -22,6 +22,7 @@
 import 'package:flutter/material.dart';
 import 'package:triviology/home_page.dart';
 import 'package:triviology/stats_page.dart';
+import 'package:triviology/settings_page.dart';
 
 class NavigationWidget extends StatefulWidget {
   const NavigationWidget(
@@ -62,6 +63,7 @@ class _NavigationWidgetState extends State<NavigationWidget> {
         databaseCodename: widget.databaseCodename,
         databaseSavefile: widget.databaseSavefile,
       ),
+      const SettingsPage(),
     ];
   }
 
@@ -93,6 +95,10 @@ class _NavigationWidgetState extends State<NavigationWidget> {
           BottomNavigationBarItem(
             icon: Icon(Icons.insert_chart_outlined_rounded),
             label: 'Stats',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
           ),
         ],
         currentIndex: _selectedIndex,
