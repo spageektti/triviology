@@ -20,6 +20,7 @@
 ? It contains important information about the project structure, code style, suggested VSCode extensions, and more.
 */
 import 'package:flutter/material.dart';
+import 'dart:math';
 import 'package:triviology/navigation_widget.dart';
 import 'package:triviology/quiz_summary_page.dart';
 import 'dart:convert';
@@ -64,9 +65,11 @@ class _QuizPageState extends State<QuizPage> {
   String _currentQuestionBody = 'loading...';
   List<List<dynamic>> _answersForAll = [];
   bool _showCardColor = false;
-  final int _correctAnswersStreak = 0;
-  final int _incorrectAnswersStreak =
+  int _correctAnswersStreak = 0;
+  int _incorrectAnswersStreak =
       0; // I know it may look weird but this achievement is as hard to get as the correct answers streak because you need to always answer wrong
+  int _maxCorrectAnswersStreak = 0;
+  int _maxIncorrectAnswersStreak = 0;
 
   Map<String, dynamic>? _decodedJson;
   Future<void> _fetchQuestions() async {
@@ -283,10 +286,30 @@ class _QuizPageState extends State<QuizPage> {
                                 : widget.difficulty == 'medium'
                                     ? 2
                                     : 3;
+
+                            _correctAnswersStreak++;
+
+                            _maxCorrectAnswersStreak = max(
+                                _maxCorrectAnswersStreak,
+                                _correctAnswersStreak);
+                            _maxIncorrectAnswersStreak = max(
+                                _maxIncorrectAnswersStreak,
+                                _incorrectAnswersStreak);
+
+                            _incorrectAnswersStreak = 0;
+
                             _correctlyAnsweredQuestions++;
                           });
                         } else {
-                          //print('Wrong answer!');
+                          _incorrectAnswersStreak++;
+
+                          _maxCorrectAnswersStreak = max(
+                              _maxCorrectAnswersStreak, _correctAnswersStreak);
+                          _maxIncorrectAnswersStreak = max(
+                              _maxIncorrectAnswersStreak,
+                              _incorrectAnswersStreak);
+
+                          _correctAnswersStreak = 0;
                         }
                         if (_currentQuestion == widget.numOfQuestions - 1) {
                           if (mounted) {
@@ -308,6 +331,10 @@ class _QuizPageState extends State<QuizPage> {
                                             widget.databaseCodename,
                                         databaseSavefile:
                                             widget.databaseSavefile,
+                                        maxCorrectAnswersStreak:
+                                            _maxCorrectAnswersStreak,
+                                        maxIncorrectAnswersStreak:
+                                            _maxIncorrectAnswersStreak,
                                       )));
                             });
                           }

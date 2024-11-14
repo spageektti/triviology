@@ -67,7 +67,12 @@ class _NavigationWidgetState extends State<NavigationWidget> {
         databaseCodename: widget.databaseCodename,
         databaseSavefile: widget.databaseSavefile,
       ),
-      const SettingsPage(),
+      SettingsPage(
+        databaseName: widget.databaseName,
+        databaseUrl: widget.databaseUrl,
+        databaseCodename: widget.databaseCodename,
+        databaseSavefile: widget.databaseSavefile,
+      ),
     ];
   }
 

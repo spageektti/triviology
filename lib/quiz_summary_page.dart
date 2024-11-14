@@ -23,10 +23,18 @@ import 'package:flutter/material.dart';
 import 'package:triviology/navigation_widget.dart';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'package:path_provider/path_provider.dart';
 
-Future<void> saveData(totalQuestions, correctAnswers, experience, categoryIdint,
-    difficultyLevel, databaseSavefile) async {
+Future<void> saveData(
+    totalQuestions,
+    correctAnswers,
+    experience,
+    categoryIdint,
+    difficultyLevel,
+    databaseSavefile,
+    maxCorrectAnswersStreak,
+    maxIncorrectAnswersStreak) async {
   final directory = await getApplicationDocumentsDirectory();
   final saveFile = File('${directory.path}/save.json');
   final categoryId = categoryIdint.toString();
@@ -44,19 +52,25 @@ Future<void> saveData(totalQuestions, correctAnswers, experience, categoryIdint,
           'totalquestions': 0,
           'correctanswers': 0,
           'experience': 0,
-          'totalquizzes': 0
+          'totalquizzes': 0,
+          'maxCorrectAnswersStreak': 0,
+          'maxIncorrectAnswersStreak': 0
         },
         'medium': {
           'totalquestions': 0,
           'correctanswers': 0,
           'experience': 0,
-          'totalquizzes': 0
+          'totalquizzes': 0,
+          'maxCorrectAnswersStreak': 0,
+          'maxIncorrectAnswersStreak': 0
         },
         'hard': {
           'totalquestions': 0,
           'correctanswers': 0,
           'experience': 0,
-          'totalquizzes': 0
+          'totalquizzes': 0,
+          'maxCorrectAnswersStreak': 0,
+          'maxIncorrectAnswersStreak': 0
         },
       };
     }
@@ -67,6 +81,8 @@ Future<void> saveData(totalQuestions, correctAnswers, experience, categoryIdint,
         'correctanswers': 0,
         'experience': 0,
         'totalquizzes': 0,
+        'maxCorrectAnswersStreak': 0,
+        'maxIncorrectAnswersStreak': 0
       };
     }
 
@@ -78,6 +94,18 @@ Future<void> saveData(totalQuestions, correctAnswers, experience, categoryIdint,
         experience;
     saveJson[databaseSavefile][categoryId][difficultyLevel]['totalquizzes'] +=
         1;
+    saveJson[databaseSavefile][categoryId][difficultyLevel]
+            ['maxCorrectAnswersStreak'] =
+        max(
+            saveJson[databaseSavefile][categoryId][difficultyLevel]
+                ['maxCorrectAnswersStreak'] as int,
+            maxCorrectAnswersStreak as int);
+    saveJson[databaseSavefile][categoryId][difficultyLevel]
+            ['maxIncorrectAnswersStreak'] =
+        max(
+            saveJson[databaseSavefile][categoryId][difficultyLevel]
+                ['maxIncorrectAnswersStreak'] as int,
+            maxIncorrectAnswersStreak as int);
 
     await saveFile.writeAsString(jsonEncode(saveJson));
   } else {
@@ -89,39 +117,51 @@ Future<void> saveData(totalQuestions, correctAnswers, experience, categoryIdint,
                   'totalquestions': totalQuestions,
                   'correctanswers': correctAnswers,
                   'experience': experience,
-                  'totalquizzes': 1
+                  'totalquizzes': 1,
+                  'maxCorrectAnswersStreak': maxCorrectAnswersStreak,
+                  'maxIncorrectAnswersStreak': maxIncorrectAnswersStreak
                 }
               : {
                   'totalquestions': 0,
                   'correctanswers': 0,
                   'experience': 0,
-                  'totalquizzes': 0
+                  'totalquizzes': 0,
+                  'maxCorrectAnswersStreak': 0,
+                  'maxIncorrectAnswersStreak': 0
                 },
           'medium': difficultyLevel == 'medium'
               ? {
                   'totalquestions': totalQuestions,
                   'correctanswers': correctAnswers,
                   'experience': experience,
-                  'totalquizzes': 1
+                  'totalquizzes': 1,
+                  'maxCorrectAnswersStreak': maxCorrectAnswersStreak,
+                  'maxIncorrectAnswersStreak': maxIncorrectAnswersStreak
                 }
               : {
                   'totalquestions': 0,
                   'correctanswers': 0,
                   'experience': 0,
-                  'totalquizzes': 0
+                  'totalquizzes': 0,
+                  'maxCorrectAnswersStreak': 0,
+                  'maxIncorrectAnswersStreak': 0
                 },
           'hard': difficultyLevel == 'hard'
               ? {
                   'totalquestions': totalQuestions,
                   'correctanswers': correctAnswers,
                   'experience': experience,
-                  'totalquizzes': 1
+                  'totalquizzes': 1,
+                  'maxCorrectAnswersStreak': maxCorrectAnswersStreak,
+                  'maxIncorrectAnswersStreak': maxIncorrectAnswersStreak
                 }
               : {
                   'totalquestions': 0,
                   'correctanswers': 0,
                   'experience': 0,
-                  'totalquizzes': 0
+                  'totalquizzes': 0,
+                  'maxCorrectAnswersStreak': 0,
+                  'maxIncorrectAnswersStreak': 0
                 },
         }
       }
@@ -143,6 +183,8 @@ class QuizSummaryPage extends StatelessWidget {
     required this.databaseUrl,
     required this.databaseCodename,
     required this.databaseSavefile,
+    required this.maxCorrectAnswersStreak,
+    required this.maxIncorrectAnswersStreak,
   });
 
   final String categoryName;
@@ -156,11 +198,20 @@ class QuizSummaryPage extends StatelessWidget {
   final String databaseUrl;
   final String databaseCodename;
   final String databaseSavefile;
+  final int maxCorrectAnswersStreak;
+  final int maxIncorrectAnswersStreak;
 
   @override
   Widget build(BuildContext context) {
-    saveData(numOfQuestions, correctlyAnsweredQuestions, earnedExperience,
-        categoryId, difficulty, databaseSavefile);
+    saveData(
+        numOfQuestions,
+        correctlyAnsweredQuestions,
+        earnedExperience,
+        categoryId,
+        difficulty,
+        databaseSavefile,
+        maxCorrectAnswersStreak,
+        maxIncorrectAnswersStreak);
     return Scaffold(
       appBar: AppBar(
         title: Text(categoryName),

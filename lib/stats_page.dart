@@ -86,10 +86,48 @@ class _StatsPageState extends State<StatsPage> {
   int _totalCorrect = 0;
   int _totalQuestions = 0;
   int _totalQuizes = 0;
+  int _easyMaxCorrectAnswersStreak = 0;
+  int _easyMaxIncorrectAnswersStreak = 0;
+  int _mediumMaxCorrectAnswersStreak = 0;
+  int _mediumMaxIncorrectAnswersStreak = 0;
+  int _hardMaxCorrectAnswersStreak = 0;
+  int _hardMaxIncorrectAnswersStreak = 0;
 
   Future<void> loadStats() async {
     final statsFile =
         File('${(await getApplicationDocumentsDirectory()).path}/save.json');
+    if (await statsFile.exists() == false) {
+      await statsFile.writeAsString(jsonEncode({
+        widget.databaseSavefile: {
+          _selectedCategory.toString(): {
+            'easy': {
+              'correctanswers': 0,
+              'totalquestions': 0,
+              'totalquizzes': 0,
+              'experience': 0,
+              'maxCorrectAnswersStreak': 0,
+              'maxIncorrectAnswersStreak': 0
+            },
+            'medium': {
+              'correctanswers': 0,
+              'totalquestions': 0,
+              'totalquizzes': 0,
+              'experience': 0,
+              'maxCorrectAnswersStreak': 0,
+              'maxIncorrectAnswersStreak': 0
+            },
+            'hard': {
+              'correctanswers': 0,
+              'totalquestions': 0,
+              'totalquizzes': 0,
+              'experience': 0,
+              'maxCorrectAnswersStreak': 0,
+              'maxIncorrectAnswersStreak': 0
+            }
+          }
+        }
+      }));
+    }
     final statsJson = await statsFile.readAsString();
     final stats = jsonDecode(statsJson);
     final categoryStats =
@@ -101,18 +139,24 @@ class _StatsPageState extends State<StatsPage> {
                   'totalquestions': 0,
                   'totalquizzes': 0,
                   'experience': 0,
+                  'maxCorrectAnswersStreak': 0,
+                  'maxIncorrectAnswersStreak': 0
                 },
                 'medium': {
                   'correctanswers': 0,
                   'totalquestions': 0,
                   'totalquizzes': 0,
                   'experience': 0,
+                  'maxCorrectAnswersStreak': 0,
+                  'maxIncorrectAnswersStreak': 0
                 },
                 'hard': {
                   'correctanswers': 0,
                   'totalquestions': 0,
                   'totalquizzes': 0,
                   'experience': 0,
+                  'maxCorrectAnswersStreak': 0,
+                  'maxIncorrectAnswersStreak': 0
                 },
               };
     setState(() {
@@ -132,6 +176,18 @@ class _StatsPageState extends State<StatsPage> {
       _totalCorrect = _easyCorrect + _mediumCorrect + _hardCorrect;
       _totalQuestions = _easyTotal + _mediumTotal + _hardTotal;
       _totalQuizes = _easyQuizes + _mediumQuizes + _hardQuizes;
+      _easyMaxCorrectAnswersStreak =
+          categoryStats['easy']['maxCorrectAnswersStreak'];
+      _easyMaxIncorrectAnswersStreak =
+          categoryStats['easy']['maxIncorrectAnswersStreak'];
+      _mediumMaxCorrectAnswersStreak =
+          categoryStats['medium']['maxCorrectAnswersStreak'];
+      _mediumMaxIncorrectAnswersStreak =
+          categoryStats['medium']['maxIncorrectAnswersStreak'];
+      _hardMaxCorrectAnswersStreak =
+          categoryStats['hard']['maxCorrectAnswersStreak'];
+      _hardMaxIncorrectAnswersStreak =
+          categoryStats['hard']['maxIncorrectAnswersStreak'];
     });
   }
 
@@ -174,7 +230,7 @@ class _StatsPageState extends State<StatsPage> {
                   height: 20,
                 ),
                 Text(
-                    'Level ${_totalExperience == 0 ? 0 : (_totalExperience).floor()}',
+                    'Level ${_totalExperience == 0 ? 0 : log2(_totalExperience).floor()}',
                     style: const TextStyle(fontSize: 18)),
                 Column(
                   children: [
@@ -185,8 +241,11 @@ class _StatsPageState extends State<StatsPage> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: LinearProgressIndicator(
-                            value:
-                                _easyTotal != 0 ? _easyCorrect / _easyTotal : 0,
+                            value: _totalExperience == 0
+                                ? 0
+                                : (_totalExperience /
+                                    (pow(2, log2(_totalExperience).floor()) *
+                                        2)),
                             backgroundColor: Colors.grey[300],
                             valueColor: const AlwaysStoppedAnimation<Color>(
                                 Colors.green),
@@ -394,6 +453,16 @@ class _StatsPageState extends State<StatsPage> {
                         element['id'] == _selectedCategory)['text'],
                     categoryIcon: Icon(categories.firstWhere((element) =>
                         element['id'] == _selectedCategory)['icon']),
+                    easyMaxCorrectAnswersStreak: _easyMaxCorrectAnswersStreak,
+                    easyMaxIncorrectAnswersStreak:
+                        _easyMaxIncorrectAnswersStreak,
+                    mediumMaxCorrectAnswersStreak:
+                        _mediumMaxCorrectAnswersStreak,
+                    mediumMaxIncorrectAnswersStreak:
+                        _mediumMaxIncorrectAnswersStreak,
+                    hardMaxCorrectAnswersStreak: _hardMaxCorrectAnswersStreak,
+                    hardMaxIncorrectAnswersStreak:
+                        _hardMaxIncorrectAnswersStreak,
                   ),
                 ),
               );

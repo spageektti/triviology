@@ -1,23 +1,30 @@
 import 'package:flutter/material.dart';
 
 class AchievementsPage extends StatelessWidget {
-  const AchievementsPage(
-      {super.key,
-      required this.easyCorrect,
-      required this.easyTotal,
-      required this.easyQuizes,
-      required this.mediumCorrect,
-      required this.mediumTotal,
-      required this.mediumQuizes,
-      required this.hardCorrect,
-      required this.hardTotal,
-      required this.hardQuizes,
-      required this.totalExperience,
-      required this.totalCorrect,
-      required this.totalQuestions,
-      required this.totalQuizes,
-      required this.categoryName,
-      required this.categoryIcon});
+  const AchievementsPage({
+    super.key,
+    required this.easyCorrect,
+    required this.easyTotal,
+    required this.easyQuizes,
+    required this.mediumCorrect,
+    required this.mediumTotal,
+    required this.mediumQuizes,
+    required this.hardCorrect,
+    required this.hardTotal,
+    required this.hardQuizes,
+    required this.totalExperience,
+    required this.totalCorrect,
+    required this.totalQuestions,
+    required this.totalQuizes,
+    required this.categoryName,
+    required this.categoryIcon,
+    required this.easyMaxCorrectAnswersStreak,
+    required this.easyMaxIncorrectAnswersStreak,
+    required this.mediumMaxCorrectAnswersStreak,
+    required this.mediumMaxIncorrectAnswersStreak,
+    required this.hardMaxCorrectAnswersStreak,
+    required this.hardMaxIncorrectAnswersStreak,
+  });
 
   final int easyCorrect;
   final int easyTotal;
@@ -34,6 +41,12 @@ class AchievementsPage extends StatelessWidget {
   final int totalQuizes;
   final String categoryName;
   final Widget categoryIcon;
+  final int easyMaxCorrectAnswersStreak;
+  final int easyMaxIncorrectAnswersStreak;
+  final int mediumMaxCorrectAnswersStreak;
+  final int mediumMaxIncorrectAnswersStreak;
+  final int hardMaxCorrectAnswersStreak;
+  final int hardMaxIncorrectAnswersStreak;
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +56,9 @@ class AchievementsPage extends StatelessWidget {
       ),
       body: ListView(
         children: [
+          const ListTile(
+            title: Center(child: Text('Easy', style: TextStyle(fontSize: 20))),
+          ),
           ListTile(
             title: Text('Correctly answer 2 easy questions',
                 style: TextStyle(
@@ -147,6 +163,100 @@ class AchievementsPage extends StatelessWidget {
           ),
           const ListTile(
             title: Center(child: Text('-------------------------')),
+          ),
+          ListTile(
+            title: Text('Correctly answer 2 easy questions in a row',
+                style: TextStyle(
+                    color: easyMaxCorrectAnswersStreak >= 2
+                        ? Colors.green
+                        : Theme.of(context).listTileTheme.textColor)),
+            subtitle: Text(categoryName),
+            leading: categoryIcon,
+          ),
+          ListTile(
+            title: Text('Correctly answer 4 easy questions in a row',
+                style: TextStyle(
+                    color: easyMaxCorrectAnswersStreak >= 4
+                        ? Colors.green
+                        : Theme.of(context).listTileTheme.textColor)),
+            subtitle: Text(categoryName),
+            leading: categoryIcon,
+          ),
+          ListTile(
+            title: Text('Correctly answer 8 easy questions in a row',
+                style: TextStyle(
+                    color: easyMaxCorrectAnswersStreak >= 8
+                        ? Colors.green
+                        : Theme.of(context).listTileTheme.textColor)),
+            subtitle: Text(categoryName),
+            leading: categoryIcon,
+          ),
+          ListTile(
+            title: Text('Correctly answer 16 easy questions in a row',
+                style: TextStyle(
+                    color: easyMaxCorrectAnswersStreak >= 16
+                        ? Colors.green
+                        : Theme.of(context).listTileTheme.textColor)),
+            subtitle: Text(categoryName),
+            leading: categoryIcon,
+          ),
+          ListTile(
+            title: Text('Correctly answer 32 easy questions in a row',
+                style: TextStyle(
+                    color: easyMaxCorrectAnswersStreak >= 32
+                        ? Colors.green
+                        : Theme.of(context).listTileTheme.textColor)),
+            subtitle: Text(categoryName),
+            leading: categoryIcon,
+          ),
+          ListTile(
+            title: Text('Incorrectly answer 2 easy questions in a row',
+                style: TextStyle(
+                    color: easyMaxIncorrectAnswersStreak >= 2
+                        ? Colors.green
+                        : Theme.of(context).listTileTheme.textColor)),
+            subtitle: Text(categoryName),
+            leading: categoryIcon,
+          ),
+          ListTile(
+            title: Text('Incorrectly answer 4 easy questions in a row',
+                style: TextStyle(
+                    color: easyMaxIncorrectAnswersStreak >= 4
+                        ? Colors.green
+                        : Theme.of(context).listTileTheme.textColor)),
+            subtitle: Text(categoryName),
+            leading: categoryIcon,
+          ),
+          ListTile(
+            title: Text('Incorrectly answer 8 easy questions in a row',
+                style: TextStyle(
+                    color: easyMaxIncorrectAnswersStreak >= 8
+                        ? Colors.green
+                        : Theme.of(context).listTileTheme.textColor)),
+            subtitle: Text(categoryName),
+            leading: categoryIcon,
+          ),
+          ListTile(
+            title: Text('Incorrectly answer 16 easy questions in a row',
+                style: TextStyle(
+                    color: easyMaxIncorrectAnswersStreak >= 16
+                        ? Colors.green
+                        : Theme.of(context).listTileTheme.textColor)),
+            subtitle: Text(categoryName),
+            leading: categoryIcon,
+          ),
+          ListTile(
+            title: Text('Incorrectly answer 32 easy questions in a row',
+                style: TextStyle(
+                    color: easyMaxIncorrectAnswersStreak >= 32
+                        ? Colors.green
+                        : Theme.of(context).listTileTheme.textColor)),
+            subtitle: Text(categoryName),
+            leading: categoryIcon,
+          ),
+          const ListTile(
+            title:
+                Center(child: Text('Medium', style: TextStyle(fontSize: 20))),
           ),
           ListTile(
             title: Text('Correctly answer 2 medium questions',
@@ -255,6 +365,99 @@ class AchievementsPage extends StatelessWidget {
             title: Center(child: Text('-------------------------')),
           ),
           ListTile(
+            title: Text('Correctly answer 2 medium questions in a row',
+                style: TextStyle(
+                    color: mediumMaxCorrectAnswersStreak >= 2
+                        ? Colors.green
+                        : Theme.of(context).listTileTheme.textColor)),
+            subtitle: Text(categoryName),
+            leading: categoryIcon,
+          ),
+          ListTile(
+            title: Text('Correctly answer 4 medium questions in a row',
+                style: TextStyle(
+                    color: mediumMaxCorrectAnswersStreak >= 4
+                        ? Colors.green
+                        : Theme.of(context).listTileTheme.textColor)),
+            subtitle: Text(categoryName),
+            leading: categoryIcon,
+          ),
+          ListTile(
+            title: Text('Correctly answer 8 medium questions in a row',
+                style: TextStyle(
+                    color: mediumMaxCorrectAnswersStreak >= 8
+                        ? Colors.green
+                        : Theme.of(context).listTileTheme.textColor)),
+            subtitle: Text(categoryName),
+            leading: categoryIcon,
+          ),
+          ListTile(
+            title: Text('Correctly answer 16 medium questions in a row',
+                style: TextStyle(
+                    color: mediumMaxCorrectAnswersStreak >= 16
+                        ? Colors.green
+                        : Theme.of(context).listTileTheme.textColor)),
+            subtitle: Text(categoryName),
+            leading: categoryIcon,
+          ),
+          ListTile(
+            title: Text('Correctly answer 32 medium questions in a row',
+                style: TextStyle(
+                    color: mediumMaxCorrectAnswersStreak >= 32
+                        ? Colors.green
+                        : Theme.of(context).listTileTheme.textColor)),
+            subtitle: Text(categoryName),
+            leading: categoryIcon,
+          ),
+          ListTile(
+            title: Text('Incorrectly answer 2 medium questions in a row',
+                style: TextStyle(
+                    color: mediumMaxIncorrectAnswersStreak >= 2
+                        ? Colors.green
+                        : Theme.of(context).listTileTheme.textColor)),
+            subtitle: Text(categoryName),
+            leading: categoryIcon,
+          ),
+          ListTile(
+            title: Text('Incorrectly answer 4 medium questions in a row',
+                style: TextStyle(
+                    color: mediumMaxIncorrectAnswersStreak >= 4
+                        ? Colors.green
+                        : Theme.of(context).listTileTheme.textColor)),
+            subtitle: Text(categoryName),
+            leading: categoryIcon,
+          ),
+          ListTile(
+            title: Text('Incorrectly answer 8 medium questions in a row',
+                style: TextStyle(
+                    color: mediumMaxIncorrectAnswersStreak >= 8
+                        ? Colors.green
+                        : Theme.of(context).listTileTheme.textColor)),
+            subtitle: Text(categoryName),
+            leading: categoryIcon,
+          ),
+          ListTile(
+            title: Text('Incorrectly answer 16 medium questions in a row',
+                style: TextStyle(
+                    color: mediumMaxIncorrectAnswersStreak >= 16
+                        ? Colors.green
+                        : Theme.of(context).listTileTheme.textColor)),
+            subtitle: Text(categoryName),
+            leading: categoryIcon,
+          ),
+          ListTile(
+            title: Text('Incorrectly answer 32 medium questions in a row',
+                style: TextStyle(
+                    color: mediumMaxIncorrectAnswersStreak >= 32
+                        ? Colors.green
+                        : Theme.of(context).listTileTheme.textColor)),
+            subtitle: Text(categoryName),
+            leading: categoryIcon,
+          ),
+          const ListTile(
+            title: Center(child: Text('Hard', style: TextStyle(fontSize: 20))),
+          ),
+          ListTile(
             title: Text('Correctly answer 2 hard questions',
                 style: TextStyle(
                     color: hardCorrect >= 2
@@ -359,6 +562,99 @@ class AchievementsPage extends StatelessWidget {
           ),
           const ListTile(
             title: Center(child: Text('-------------------------')),
+          ),
+          ListTile(
+            title: Text('Correctly answer 2 hard questions in a row',
+                style: TextStyle(
+                    color: hardMaxCorrectAnswersStreak >= 2
+                        ? Colors.green
+                        : Theme.of(context).listTileTheme.textColor)),
+            subtitle: Text(categoryName),
+            leading: categoryIcon,
+          ),
+          ListTile(
+            title: Text('Correctly answer 4 hard questions in a row',
+                style: TextStyle(
+                    color: hardMaxCorrectAnswersStreak >= 4
+                        ? Colors.green
+                        : Theme.of(context).listTileTheme.textColor)),
+            subtitle: Text(categoryName),
+            leading: categoryIcon,
+          ),
+          ListTile(
+            title: Text('Correctly answer 8 hard questions in a row',
+                style: TextStyle(
+                    color: hardMaxCorrectAnswersStreak >= 8
+                        ? Colors.green
+                        : Theme.of(context).listTileTheme.textColor)),
+            subtitle: Text(categoryName),
+            leading: categoryIcon,
+          ),
+          ListTile(
+            title: Text('Correctly answer 16 hard questions in a row',
+                style: TextStyle(
+                    color: hardMaxCorrectAnswersStreak >= 16
+                        ? Colors.green
+                        : Theme.of(context).listTileTheme.textColor)),
+            subtitle: Text(categoryName),
+            leading: categoryIcon,
+          ),
+          ListTile(
+            title: Text('Correctly answer 32 hard questions in a row',
+                style: TextStyle(
+                    color: hardMaxCorrectAnswersStreak >= 32
+                        ? Colors.green
+                        : Theme.of(context).listTileTheme.textColor)),
+            subtitle: Text(categoryName),
+            leading: categoryIcon,
+          ),
+          ListTile(
+            title: Text('Incorrectly answer 2 hard questions in a row',
+                style: TextStyle(
+                    color: hardMaxIncorrectAnswersStreak >= 2
+                        ? Colors.green
+                        : Theme.of(context).listTileTheme.textColor)),
+            subtitle: Text(categoryName),
+            leading: categoryIcon,
+          ),
+          ListTile(
+            title: Text('Incorrectly answer 4 hard questions in a row',
+                style: TextStyle(
+                    color: hardMaxIncorrectAnswersStreak >= 4
+                        ? Colors.green
+                        : Theme.of(context).listTileTheme.textColor)),
+            subtitle: Text(categoryName),
+            leading: categoryIcon,
+          ),
+          ListTile(
+            title: Text('Incorrectly answer 8 hard questions in a row',
+                style: TextStyle(
+                    color: hardMaxIncorrectAnswersStreak >= 8
+                        ? Colors.green
+                        : Theme.of(context).listTileTheme.textColor)),
+            subtitle: Text(categoryName),
+            leading: categoryIcon,
+          ),
+          ListTile(
+            title: Text('Incorrectly answer 16 hard questions in a row',
+                style: TextStyle(
+                    color: hardMaxIncorrectAnswersStreak >= 16
+                        ? Colors.green
+                        : Theme.of(context).listTileTheme.textColor)),
+            subtitle: Text(categoryName),
+            leading: categoryIcon,
+          ),
+          ListTile(
+            title: Text('Incorrectly answer 32 hard questions in a row',
+                style: TextStyle(
+                    color: hardMaxIncorrectAnswersStreak >= 32
+                        ? Colors.green
+                        : Theme.of(context).listTileTheme.textColor)),
+            subtitle: Text(categoryName),
+            leading: categoryIcon,
+          ),
+          const ListTile(
+            title: Center(child: Text('All', style: TextStyle(fontSize: 20))),
           ),
           ListTile(
             title: Text('Correctly answer 2 questions',

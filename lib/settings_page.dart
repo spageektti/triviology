@@ -21,24 +21,86 @@
 */
 import 'package:flutter/material.dart';
 import 'package:triviology/download_page.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+  const SettingsPage(
+      {super.key,
+      required this.databaseName,
+      required this.databaseUrl,
+      required this.databaseCodename,
+      required this.databaseSavefile});
+
+  final String databaseName;
+  final String databaseUrl;
+  final String databaseCodename;
+  final String databaseSavefile;
 
   @override
   _SettingsPageState createState() => _SettingsPageState();
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  Future<void> clearQuizResults() async {
+    final directory = await getApplicationDocumentsDirectory();
+    final quizResultsFile = File('${directory.path}/save.json');
+
+    if (await quizResultsFile.exists()) {
+      await quizResultsFile.delete();
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Success'),
+              content: const Text('Quiz results have been cleared.'),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } else {
+      if (mounted) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Error'),
+                content: const Text('No quiz results to clear.'),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('OK'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
       ),
-      body: const Center(
-        child: Text('Settings Page Content'),
-      ),
+      body: Center(
+          child: ElevatedButton(
+              onPressed: () {
+                clearQuizResults();
+              },
+              child: const Text('Clear saved quiz results'))),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
