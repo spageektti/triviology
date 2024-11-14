@@ -25,31 +25,35 @@ import 'package:triviology/stats_page.dart';
 import 'package:triviology/settings_page.dart';
 
 class NavigationWidget extends StatefulWidget {
-  const NavigationWidget(
-      {super.key,
-      required this.databaseName,
-      required this.databaseUrl,
-      required this.databaseCodename,
-      required this.databaseSavefile});
-
+  final int selectedIndex;
   final String databaseName;
   final String databaseUrl;
   final String databaseCodename;
   final String databaseSavefile;
+
+  const NavigationWidget({
+    super.key,
+    this.selectedIndex = 0,
+    required this.databaseName,
+    required this.databaseUrl,
+    required this.databaseCodename,
+    required this.databaseSavefile,
+  });
 
   @override
   _NavigationWidgetState createState() => _NavigationWidgetState();
 }
 
 class _NavigationWidgetState extends State<NavigationWidget> {
-  int _selectedIndex = 0;
-  final PageController _pageController = PageController();
-
+  late PageController _pageController;
   late List<Widget> _pages;
+  late int _selectedIndex;
 
   @override
   void initState() {
     super.initState();
+    _selectedIndex = widget.selectedIndex;
+    _pageController = PageController(initialPage: _selectedIndex);
     _pages = <Widget>[
       HomePage(
         databaseName: widget.databaseName,
@@ -79,12 +83,12 @@ class _NavigationWidgetState extends State<NavigationWidget> {
     return Scaffold(
       body: PageView(
         controller: _pageController,
+        children: _pages,
         onPageChanged: (index) {
           setState(() {
             _selectedIndex = index;
           });
         },
-        children: _pages,
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
@@ -93,7 +97,7 @@ class _NavigationWidgetState extends State<NavigationWidget> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.insert_chart_outlined_rounded),
+            icon: Icon(Icons.bar_chart),
             label: 'Stats',
           ),
           BottomNavigationBarItem(

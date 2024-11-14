@@ -20,10 +20,12 @@
 ? It contains important information about the project structure, code style, suggested VSCode extensions, and more.
 */
 import 'package:flutter/material.dart';
+import 'package:triviology/navigation_widget.dart';
 import 'package:triviology/quiz_summary_page.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as htmlParser;
+import 'package:triviology/settings_page.dart';
 
 class QuizPage extends StatefulWidget {
   const QuizPage(
@@ -62,75 +64,11 @@ class _QuizPageState extends State<QuizPage> {
   String _currentQuestionBody = 'loading...';
   List<List<dynamic>> _answersForAll = [];
   bool _showCardColor = false;
+  final int _correctAnswersStreak = 0;
+  final int _incorrectAnswersStreak =
+      0; // I know it may look weird but this achievement is as hard to get as the correct answers streak because you need to always answer wrong
 
-  // example JSON from API call to Open Trivia DB
-  Map<String, dynamic>?
-      _decodedJson; /*jsonDecode(
-      '');*/ /*'''{
-  "response_code": 0,
-  "results": [
-    {
-      "type": "multiple",
-      "difficulty": "medium",
-      "category": "History",
-      "question": "In what year did the First World War end?",
-      "correct_answer": "1918",
-      "incorrect_answers": [
-        "1914",
-        "1916",
-        "1912"
-      ]
-    },
-    {
-      "type": "multiple",
-      "difficulty": "easy",
-      "category": "General Knowledge",
-      "question": "In DC comics where does the Green Arrow (Oliver Queen) live?",
-      "correct_answer": "Star City",
-      "incorrect_answers": [
-        "Central City",
-        "Gotham City",
-        "Metropolis"
-      ]
-    },
-    {
-      "type": "boolean",
-      "difficulty": "easy",
-      "category": "Entertainment: Music",
-      "question": "American rapper Dr. Dre actually has a Ph.D. doctorate.",
-      "correct_answer": "False",
-      "incorrect_answers": [
-        "True"
-      ]
-    },
-    {
-      "type": "multiple",
-      "difficulty": "medium",
-      "category": "Science: Mathematics",
-      "question": "What shape does sin(x) or cos(x) make on a graph?",
-      "correct_answer": "Waves",
-      "incorrect_answers": [
-        "A Parabola",
-        "A Straight Line",
-        "Zig-Zags"
-      ]
-    },
-    {
-      "type": "boolean",
-      "difficulty": "easy",
-      "category": "Entertainment: Video Games",
-      "question": "Codemasters is the developer of the Gran Turismo series.",
-      "correct_answer": "False",
-      "incorrect_answers": [
-        "True"
-      ]
-    }
-  ]
-}
-''');*/
-  // !there is probably a bug somewhere in this code, because some categories return errors
-  // it is actually probably because there are less questions in some categories/difficulty combinations than the number of questions requested
-  // TODO: read API docs to learn what these errors mean and how to handle them
+  Map<String, dynamic>? _decodedJson;
   Future<void> _fetchQuestions() async {
     String url =
         "https://opentdb.com/api.php?amount=${widget.numOfQuestions}&category=${widget.categoryId}&difficulty=${widget.difficulty}";
@@ -183,8 +121,15 @@ class _QuizPageState extends State<QuizPage> {
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.of(context).pushNamedAndRemoveUntil(
-                            '/settings', (Route<dynamic> route) => false);
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                                builder: (context) => NavigationWidget(
+                                    databaseCodename: widget.databaseCodename,
+                                    databaseName: widget.databaseName,
+                                    databaseSavefile: widget.databaseSavefile,
+                                    databaseUrl: widget.databaseUrl,
+                                    selectedIndex: 2)),
+                            (Route<dynamic> route) => false);
                       },
                       child: const Text('Settings'),
                     ),
