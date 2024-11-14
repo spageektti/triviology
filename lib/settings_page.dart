@@ -23,6 +23,7 @@ import 'package:flutter/material.dart';
 import 'package:triviology/download_page.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
+import 'dart:convert';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage(
@@ -42,6 +43,15 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  final _downloadedDatabases = <DropdownMenuItem<String>>[
+    const DropdownMenuItem(
+      value: 'loading...',
+      child: Text('loading...'),
+    ),
+  ];
+  bool _downloadedDatabasesLoaded = false;
+  String? _selectedDatabase;
+
   Future<void> clearQuizResults() async {
     final directory = await getApplicationDocumentsDirectory();
     final quizResultsFile = File('${directory.path}/save.json');
@@ -89,18 +99,138 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
+  Future<void> clearSettings() async {
+    final directory = await getApplicationDocumentsDirectory();
+    final settingsFile = File('${directory.path}/settings.json');
+
+    if (await settingsFile.exists()) {
+      await settingsFile.delete();
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Success'),
+              content: const Text('Settings have been cleared.'),
+              actions: <Widget>[
+                TextButton(
+                  child: const Row(
+                    children: [
+                      Icon(Icons.refresh),
+                      Text('Reload'),
+                    ],
+                  ),
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pushNamedAndRemoveUntil('/', (route) => false);
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } else {
+      if (mounted) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Error'),
+                content: const Text('No settings to clear.'),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('OK'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            });
+      }
+    }
+  }
+
+  Future<void> loadDatabases() async {
+    final directory = await getApplicationDocumentsDirectory();
+    final databases = <DropdownMenuItem<String>>[];
+
+    final files = directory.listSync();
+    for (var file in files) {
+      if (file.path.endsWith('.json') &&
+          !file.path.endsWith('save.json') &&
+          !file.path.endsWith('settings.json')) {
+        final database = file.path.split('/').last;
+        databases.add(DropdownMenuItem(
+          value: database,
+          child: Text(database),
+        ));
+      }
+    }
+
+    setState(() {
+      _downloadedDatabases.clear();
+      _downloadedDatabases.addAll(databases);
+      _downloadedDatabasesLoaded = true;
+    });
+  }
+
+  Future<void> updateSelectedDatabase(String database) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final settingsFile = File('${directory.path}/settings.json');
+    final settingsJson = await settingsFile.readAsString();
+    final settings = jsonDecode(settingsJson);
+    final databaseFile = File('${directory.path}/$database');
+    final databaseJson = await databaseFile.readAsString();
+    final databaseSettings = jsonDecode(databaseJson);
+
+    settings['databaseName'] = databaseSettings['name'];
+    settings['databaseCodename'] = databaseSettings['codename'];
+    settings['databaseSavefile'] = databaseSettings['savefile'];
+    settings['databaseUrl'] = databaseSettings['url'];
+
+    await settingsFile.writeAsString(jsonEncode(settings));
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (_downloadedDatabasesLoaded == false) {
+      loadDatabases();
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
       ),
       body: Center(
-          child: ElevatedButton(
+          child: Column(
+        children: [
+          const Text('Select question source'),
+          DropdownButton<String>(
+            items: _downloadedDatabases,
+            onChanged: (String? newValue) {
+              updateSelectedDatabase(newValue!);
+              setState(() {
+                _selectedDatabase = newValue;
+              });
+            },
+            value: _selectedDatabase,
+            hint: const Text('Select question source'),
+          ),
+          const SizedBox(height: 10),
+          ElevatedButton(
               onPressed: () {
                 clearQuizResults();
               },
-              child: const Text('Clear saved quiz results'))),
+              child: const Text('Clear saved quiz results')),
+          const SizedBox(height: 10),
+          ElevatedButton(
+              onPressed: () {
+                clearSettings();
+              },
+              child: const Text('Clear settings'))
+        ],
+      )),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) {

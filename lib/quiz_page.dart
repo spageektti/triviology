@@ -26,7 +26,6 @@ import 'package:triviology/quiz_summary_page.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as htmlParser;
-import 'package:triviology/settings_page.dart';
 
 class QuizPage extends StatefulWidget {
   const QuizPage(
