@@ -155,7 +155,7 @@ class AchievementsPage extends StatelessWidget {
             title: Text('Correctly answer 100% of at least 20 easy questions',
                 style: TextStyle(
                     color:
-                        easyCorrect / easyTotal * 100 >= 50 && easyTotal >= 20
+                        easyCorrect / easyTotal * 100 >= 100 && easyTotal >= 20
                             ? Colors.green
                             : Theme.of(context).listTileTheme.textColor)),
             subtitle: Text(categoryName),
@@ -354,7 +354,7 @@ class AchievementsPage extends StatelessWidget {
           ListTile(
             title: Text('Correctly answer 100% of at least 20 medium questions',
                 style: TextStyle(
-                    color: mediumCorrect / mediumTotal * 100 >= 50 &&
+                    color: mediumCorrect / mediumTotal * 100 >= 100 &&
                             mediumTotal >= 20
                         ? Colors.green
                         : Theme.of(context).listTileTheme.textColor)),
@@ -554,7 +554,7 @@ class AchievementsPage extends StatelessWidget {
             title: Text('Correctly answer 100% of at least 20 hard questions',
                 style: TextStyle(
                     color:
-                        hardCorrect / hardTotal * 100 >= 50 && hardTotal >= 20
+                        hardCorrect / hardTotal * 100 >= 100 && hardTotal >= 20
                             ? Colors.green
                             : Theme.of(context).listTileTheme.textColor)),
             subtitle: Text(categoryName),
@@ -752,7 +752,7 @@ class AchievementsPage extends StatelessWidget {
           ListTile(
             title: Text('Correctly answer 100% of at least 20 questions',
                 style: TextStyle(
-                    color: totalCorrect / totalQuestions * 100 >= 50 &&
+                    color: totalCorrect / totalQuestions * 100 >= 100 &&
                             totalQuestions >= 20
                         ? Colors.green
                         : Theme.of(context).listTileTheme.textColor)),
