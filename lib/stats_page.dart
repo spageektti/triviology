@@ -26,33 +26,7 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'achievements_page.dart';
 import 'dart:math';
-
-final List<Map<String, dynamic>> categories = [
-  {'icon': Icons.question_answer, 'text': 'General Knowledge', 'id': 9},
-  {'icon': Icons.book, 'text': 'Books', 'id': 10},
-  {'icon': Icons.movie, 'text': 'Film', 'id': 11},
-  {'icon': Icons.headphones, 'text': 'Music', 'id': 12},
-  {'icon': Icons.theater_comedy, 'text': 'Musicals & Theatres', 'id': 13},
-  {'icon': Icons.tv, 'text': 'Television', 'id': 14},
-  {'icon': Icons.videogame_asset, 'text': 'Video Games', 'id': 15},
-  {'icon': Icons.extension, 'text': 'Board Games', 'id': 16},
-  {'icon': Icons.science_rounded, 'text': 'Science & Nature', 'id': 17},
-  {'icon': Icons.computer, 'text': 'Computers', 'id': 18},
-  {'icon': Icons.calculate, 'text': 'Mathematics', 'id': 19},
-  {'icon': Icons.menu_book, 'text': 'Mythology', 'id': 20},
-  {'icon': Icons.sports, 'text': 'Sports', 'id': 21},
-  {'icon': Icons.map, 'text': 'Geography', 'id': 22},
-  {'icon': Icons.history_edu, 'text': 'History', 'id': 23},
-  {'icon': Icons.how_to_vote, 'text': 'Politics', 'id': 24},
-  {'icon': Icons.brush, 'text': 'Art', 'id': 25},
-  {'icon': Icons.star, 'text': 'Celebrities', 'id': 26},
-  {'icon': Icons.pets, 'text': 'Animals', 'id': 27},
-  {'icon': Icons.directions_car, 'text': 'Vehicles', 'id': 28},
-  {'icon': Icons.my_library_books, 'text': 'Comics', 'id': 29},
-  {'icon': Icons.devices_other, 'text': 'Gadgets', 'id': 30},
-  {'icon': Icons.face, 'text': 'Japanese Anime & Manga', 'id': 31},
-  {'icon': Icons.animation, 'text': 'Cartoon & Animations', 'id': 32},
-];
+import 'package:triviology/icon_mapper.dart';
 
 class StatsPage extends StatefulWidget {
   const StatsPage(
@@ -93,6 +67,67 @@ class _StatsPageState extends State<StatsPage> {
   int _mediumMaxIncorrectAnswersStreak = 0;
   int _hardMaxCorrectAnswersStreak = 0;
   int _hardMaxIncorrectAnswersStreak = 0;
+  final List<Map<String, dynamic>> _categories = [
+    {'icon': Icons.question_answer, 'text': 'General Knowledge', 'id': 9},
+    {'icon': Icons.book, 'text': 'Books', 'id': 10},
+    {'icon': Icons.movie, 'text': 'Film', 'id': 11},
+    {'icon': Icons.headphones, 'text': 'Music', 'id': 12},
+    {'icon': Icons.theater_comedy, 'text': 'Musicals & Theatres', 'id': 13},
+    {'icon': Icons.tv, 'text': 'Television', 'id': 14},
+    {'icon': Icons.videogame_asset, 'text': 'Video Games', 'id': 15},
+    {'icon': Icons.extension, 'text': 'Board Games', 'id': 16},
+    {'icon': Icons.science_rounded, 'text': 'Science & Nature', 'id': 17},
+    {'icon': Icons.computer, 'text': 'Computers', 'id': 18},
+    {'icon': Icons.calculate, 'text': 'Mathematics', 'id': 19},
+    {'icon': Icons.menu_book, 'text': 'Mythology', 'id': 20},
+    {'icon': Icons.sports, 'text': 'Sports', 'id': 21},
+    {'icon': Icons.map, 'text': 'Geography', 'id': 22},
+    {'icon': Icons.history_edu, 'text': 'History', 'id': 23},
+    {'icon': Icons.how_to_vote, 'text': 'Politics', 'id': 24},
+    {'icon': Icons.brush, 'text': 'Art', 'id': 25},
+    {'icon': Icons.star, 'text': 'Celebrities', 'id': 26},
+    {'icon': Icons.pets, 'text': 'Animals', 'id': 27},
+    {'icon': Icons.directions_car, 'text': 'Vehicles', 'id': 28},
+    {'icon': Icons.my_library_books, 'text': 'Comics', 'id': 29},
+    {'icon': Icons.devices_other, 'text': 'Gadgets', 'id': 30},
+    {'icon': Icons.face, 'text': 'Japanese Anime & Manga', 'id': 31},
+    {'icon': Icons.animation, 'text': 'Cartoon & Animations', 'id': 32},
+  ];
+  bool _categoriesLoaded = false;
+
+  Future<void> loadCategories() async {
+    if (widget.databaseCodename == 'opentdbapi') {
+      // so it doesn't have to load
+      setState(() {
+        _categoriesLoaded = true;
+      });
+    } else {
+      final directory = await getApplicationDocumentsDirectory();
+      final databaseJson =
+          File('${directory.path}/${widget.databaseCodename}.json');
+      if (await databaseJson.exists()) {
+        final database = await databaseJson.readAsString();
+        final categories = jsonDecode(database)['categories'];
+        print(categories);
+        setState(() {
+          _categories.clear();
+          _categories.addAll(
+              List<Map<String, dynamic>>.from(categories.map((category) {
+            return {
+              'icon': getIconData(category['icon']),
+              'text': category['text'],
+              'id': category['id'],
+            };
+          })));
+          _categoriesLoaded = true;
+        });
+      } else {
+        setState(() {
+          _categoriesLoaded = true;
+        });
+      }
+    }
+  }
 
   Future<void> loadStats() async {
     final statsFile =
