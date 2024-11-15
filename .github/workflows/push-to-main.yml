@@ -57,7 +57,7 @@ jobs:
 
       - name: Commit version change
         run: |
-          git config --local user.email "contact@spageektti.cc"
+          git config --local user.email "git@spageektti.cc"
           git config --local user.name "GitHub Actions"
           git add pubspec.yaml
           git commit -m "Update version number"
