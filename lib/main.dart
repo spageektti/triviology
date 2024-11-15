@@ -1,4 +1,5 @@
 /*
+* main.dart - the main entry point for the Triviology app.
 * Triviology - a fun and challenging trivia app to test your knowledge on various topics.
 * Copyright (C) 2024  Wiktor Perskawiec <contact@spageektti.cc>
 

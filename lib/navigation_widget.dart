@@ -1,4 +1,5 @@
 /*
+* navigation_widget.dart - a widget that handles the navigation between the home, stats and settings pages.
 * Triviology - a fun and challenging trivia app to test your knowledge on various topics.
 * Copyright (C) 2024  Wiktor Perskawiec <contact@spageektti.cc>
 

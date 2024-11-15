@@ -1,4 +1,5 @@
 /*
+* quiz_summary_page.dart - a page that displays the results of a quiz and saves them.
 * Triviology - a fun and challenging trivia app to test your knowledge on various topics.
 * Copyright (C) 2024  Wiktor Perskawiec <contact@spageektti.cc>
 
