@@ -209,6 +209,38 @@ class _QuizPageState extends State<QuizPage> {
             child: Text('$_currentQuestion/${widget.numOfQuestions}'),
           ),
         ],
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text('Confirm Exit'),
+                  content: const Text(
+                      'Are you sure you want to exit the quiz? You current progress will not be saved.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(); // Close the dialog
+                      },
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            '/',
+                            (Route<dynamic> route) =>
+                                false); // Navigate back to home
+                      },
+                      child: const Text('Exit'),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+        ),
       ),
       body: Center(
         child: Column(

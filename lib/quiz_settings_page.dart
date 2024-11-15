@@ -332,7 +332,8 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                 if (_current_setting == 2) {
                   print(
                       'Quiz started with $_numOfQuestions questions, $_difficulty difficulty, and $_questionType question type.');
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  Navigator.pushAndRemoveUntil(context,
+                      MaterialPageRoute(builder: (context) {
                     return QuizPage(
                       categoryId: widget.categoryId,
                       categoryName: widget.categoryName,
@@ -344,7 +345,7 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                       databaseCodename: widget.databaseCodename,
                       databaseSavefile: widget.databaseSavefile,
                     );
-                  }));
+                  }), (route) => false);
                 } else {
                   setState(() {
                     _current_setting++;

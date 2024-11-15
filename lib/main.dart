@@ -43,7 +43,7 @@ Future<void> checkAndCreateSettingsFile() async {
   final directory = await getApplicationDocumentsDirectory();
   final settingsFile = File('${directory.path}/settings.json');
 
-  if (!await settingsFile.exists()) {
+  if (!await settingsFile.exists() || await settingsFile.length() == 0) {
     final settings = {
       'databaseName': 'Open Trivia Database API',
       'databaseCodename': 'opentdbapi',

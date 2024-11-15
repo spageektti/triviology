@@ -50,7 +50,13 @@ class _SettingsPageState extends State<SettingsPage> {
     ),
   ];
   bool _downloadedDatabasesLoaded = false;
-  String? _selectedDatabase;
+  late String _selectedDatabase;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedDatabase = '${widget.databaseCodename}.json';
+  }
 
   Future<void> clearQuizResults() async {
     final directory = await getApplicationDocumentsDirectory();
@@ -115,6 +121,7 @@ class _SettingsPageState extends State<SettingsPage> {
               actions: <Widget>[
                 TextButton(
                   child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Icon(Icons.refresh),
                       Text('Reload'),
@@ -179,6 +186,10 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<void> updateSelectedDatabase(String database) async {
     final directory = await getApplicationDocumentsDirectory();
     final settingsFile = File('${directory.path}/settings.json');
+    if (!await settingsFile.exists()) {
+      await settingsFile.create();
+      await settingsFile.writeAsString('{}');
+    }
     final settingsJson = await settingsFile.readAsString();
     final settings = jsonDecode(settingsJson);
     final databaseFile = File('${directory.path}/$database');
@@ -191,6 +202,33 @@ class _SettingsPageState extends State<SettingsPage> {
     settings['databaseUrl'] = databaseSettings['url'];
 
     await settingsFile.writeAsString(jsonEncode(settings));
+
+    if (mounted) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Success'),
+            content: const Text('Settings have been updated.'),
+            actions: <Widget>[
+              TextButton(
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Icon(Icons.refresh),
+                    Text('Reload'),
+                  ],
+                ),
+                onPressed: () {
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil('/', (route) => false);
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   @override
@@ -206,17 +244,23 @@ class _SettingsPageState extends State<SettingsPage> {
           child: Column(
         children: [
           const Text('Select question source'),
-          DropdownButton<String>(
-            items: _downloadedDatabases,
-            onChanged: (String? newValue) {
-              updateSelectedDatabase(newValue!);
-              setState(() {
-                _selectedDatabase = newValue;
-              });
-            },
-            value: _selectedDatabase,
-            hint: const Text('Select question source'),
-          ),
+          if (_downloadedDatabasesLoaded)
+            DropdownButton<String>(
+              items: _downloadedDatabases,
+              onChanged: (String? newValue) {
+                setState(() {
+                  _selectedDatabase = newValue as String;
+                });
+              },
+              value: _selectedDatabase,
+              hint: const Text('Select question source'),
+            ),
+          const SizedBox(height: 10),
+          ElevatedButton(
+              onPressed: () {
+                updateSelectedDatabase(_selectedDatabase);
+              },
+              child: const Text('Save new settings')),
           const SizedBox(height: 10),
           ElevatedButton(
               onPressed: () {
