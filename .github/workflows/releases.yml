@@ -1,3 +1,18 @@
+#* Copyright (C) 2024  Wiktor Perskawiec <contact@spageektti.cc>
+#
+#? This program is free software: you can redistribute it and/or modify
+#? it under the terms of the GNU General Public License as published by
+#? the Free Software Foundation, either version 3 of the License, or
+#? (at your option) any later version.
+#
+#! This program is distributed in the hope that it will be useful,
+#! but WITHOUT ANY WARRANTY; without even the implied warranty of
+#! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#! GNU General Public License for more details.
+#
+#* You should have received a copy of the GNU General Public License
+#* along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 name: Build and Release APK
 
 on:
@@ -35,6 +50,23 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Update build number
+        run: |
+          sed -i -E 's/(version:.*\+)([0-9]+)/echo "\1$((\2 + 1))"/e' pubspec.yaml
+
+      - name: Update version number
+        run: |
+          version=$(echo ${{ github.event.release.tag_name }} | sed 's/^v//')
+          sed -i -E "s/(version:.*\+)([0-9]+)/version: $version+\2/" pubspec.yaml
+
+      - name: Commit version change
+        run: |
+          git config --local user.email "
+          git config --local user.name "GitHub Actions"
+          git add pubspec.yaml
+          git commit -m "Update version number"
+          git push
+
       - name: Build APK
         run: flutter build apk --release
 
@@ -54,7 +86,7 @@ jobs:
             build/app/outputs/flutter-apk/app-release.apk.sha1
 
       - name: Upload APK and checksums to release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag: ${{ github.event.release.tag_name }}
           files: |
