@@ -55,6 +55,14 @@ jobs:
         run: |
           sed -i -E 's/(version:.*\+)([0-9]+)/echo "\1$((\2 + 1))"/e' pubspec.yaml
 
+      - name: Commit version change
+        run: |
+          git config --local user.email "
+          git config --local user.name "GitHub Actions"
+          git add pubspec.yaml
+          git commit -m "Update version number"
+          git push
+
       - name: Build APK
         run: flutter build apk --release
 
