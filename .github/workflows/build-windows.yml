@@ -41,4 +41,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: windows
-          path: build/windows/runner/Release/triviology.exe
+          path: build\windows\x64\runner\Release\triviology.exe
