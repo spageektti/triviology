@@ -1,6 +1,12 @@
-# triviology
+<p align="center">
+  <img src="https://github.com/triviology.png" alt="Triviology" style="display: block; margin: 0 auto;" width=250/>
+</p>
+<h3 align="center">Triviology</h3>
+<p align="center">A fun and challenging trivia app to test your knowledge on various topics!</p>
+<hr>
 
-A fun and challenging trivia app to test your knowledge on various topics!
+[![Build and Release APK](https://github.com/spageektti/triviology/actions/workflows/releases.yml/badge.svg)](https://github.com/spageektti/triviology/actions/workflows/releases.yml)
+[![Build APK on Push to Main](https://github.com/spageektti/triviology/actions/workflows/push-to-main.yml/badge.svg)](https://github.com/spageektti/triviology/actions/workflows/push-to-main.yml)
 
 TODO: add real readme
 
