@@ -1,0 +1,44 @@
+#* Copyright (C) 2024  Wiktor Perskawiec <contact@spageektti.cc>
+#
+#? This program is free software: you can redistribute it and/or modify
+#? it under the terms of the GNU General Public License as published by
+#? the Free Software Foundation, either version 3 of the License, or
+#? (at your option) any later version.
+#
+#! This program is distributed in the hope that it will be useful,
+#! but WITHOUT ANY WARRANTY; without even the implied warranty of
+#! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#! GNU General Public License for more details.
+#
+#* You should have received a copy of the GNU General Public License
+#* along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+name: Build for Windows
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.24.4"
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Windows
+        run: flutter build windows
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: build/windows/runner/Release
