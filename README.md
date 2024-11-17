@@ -10,6 +10,8 @@
 
 TODO: add real readme
 
+See CONTRIBUTING.md for instructions.
+
 ### License
 
 ```
