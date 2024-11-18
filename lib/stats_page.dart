@@ -96,36 +96,29 @@ class _StatsPageState extends State<StatsPage> {
   bool _categoriesLoaded = false;
 
   Future<void> loadCategories() async {
-    if (widget.databaseCodename == 'opentdbapi') {
-      // so it doesn't have to load
+    final directory = await getApplicationDocumentsDirectory();
+    final databaseJson =
+        File('${directory.path}/${widget.databaseCodename}.json');
+    if (await databaseJson.exists()) {
+      final database = await databaseJson.readAsString();
+      final categories = jsonDecode(database)['categories'];
+      print(categories);
       setState(() {
+        _categories.clear();
+        _categories
+            .addAll(List<Map<String, dynamic>>.from(categories.map((category) {
+          return {
+            'icon': getIconData(category['icon']),
+            'text': category['text'],
+            'id': category['id'],
+          };
+        })));
         _categoriesLoaded = true;
       });
     } else {
-      final directory = await getApplicationDocumentsDirectory();
-      final databaseJson =
-          File('${directory.path}/${widget.databaseCodename}.json');
-      if (await databaseJson.exists()) {
-        final database = await databaseJson.readAsString();
-        final categories = jsonDecode(database)['categories'];
-        print(categories);
-        setState(() {
-          _categories.clear();
-          _categories.addAll(
-              List<Map<String, dynamic>>.from(categories.map((category) {
-            return {
-              'icon': getIconData(category['icon']),
-              'text': category['text'],
-              'id': category['id'],
-            };
-          })));
-          _categoriesLoaded = true;
-        });
-      } else {
-        setState(() {
-          _categoriesLoaded = true;
-        });
-      }
+      setState(() {
+        _categoriesLoaded = true;
+      });
     }
   }
 
@@ -232,12 +225,15 @@ class _StatsPageState extends State<StatsPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (!_categoriesLoaded) {
+      loadCategories();
+    }
     return Scaffold(
       body: Center(
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Icon(
             _selectedCategory != null
-                ? categories.firstWhere(
+                ? _categories.firstWhere(
                     (element) => element['id'] == _selectedCategory)['icon']
                 : Icons.error,
             size: 50,
@@ -245,7 +241,7 @@ class _StatsPageState extends State<StatsPage> {
           DropdownButton<int>(
             value: _selectedCategory,
             hint: const Text('Select a category'),
-            items: categories.map((category) {
+            items: _categories.map((category) {
               return DropdownMenuItem<int>(
                 value: category['id'],
                 child: Text(category['text']),
@@ -485,9 +481,9 @@ class _StatsPageState extends State<StatsPage> {
                     totalCorrect: _totalCorrect,
                     totalQuestions: _totalQuestions,
                     totalQuizes: _totalQuizes,
-                    categoryName: categories.firstWhere((element) =>
+                    categoryName: _categories.firstWhere((element) =>
                         element['id'] == _selectedCategory)['text'],
-                    categoryIcon: Icon(categories.firstWhere((element) =>
+                    categoryIcon: Icon(_categories.firstWhere((element) =>
                         element['id'] == _selectedCategory)['icon']),
                     easyMaxCorrectAnswersStreak: _easyMaxCorrectAnswersStreak,
                     easyMaxIncorrectAnswersStreak:
