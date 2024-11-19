@@ -39,7 +39,10 @@ class QuizPage extends StatefulWidget {
       required this.databaseName,
       required this.databaseUrl,
       required this.databaseCodename,
-      required this.databaseSavefile});
+      required this.databaseSavefile,
+      required this.databaseType,
+      required this.apiUrl,
+      required this.questions});
 
   final int categoryId;
   final String categoryName;
@@ -50,6 +53,9 @@ class QuizPage extends StatefulWidget {
   final String databaseUrl;
   final String databaseCodename;
   final String databaseSavefile;
+  final String databaseType;
+  final String apiUrl;
+  final String questions;
 
   @override
   _QuizPageState createState() => _QuizPageState();
@@ -72,9 +78,9 @@ class _QuizPageState extends State<QuizPage> {
   int _maxIncorrectAnswersStreak = 0;
 
   Map<String, dynamic>? _decodedJson;
-  Future<void> _fetchQuestions() async {
+  Future<void> _fetchQuestionsFromApi() async {
     String url =
-        "https://opentdb.com/api.php?amount=${widget.numOfQuestions}&category=${widget.categoryId}&difficulty=${widget.difficulty}";
+        "${widget.apiUrl}?amount=${widget.numOfQuestions}&category=${widget.categoryId}&difficulty=${widget.difficulty}";
     if (widget.questionType != 'any') {
       url += '&type=${widget.questionType}';
     }
@@ -152,23 +158,102 @@ class _QuizPageState extends State<QuizPage> {
     }
   }
 
+  Future<void> _fetchQuestionsFromLocal() async {
+    final Map<String, dynamic> decodedJson =
+        jsonDecode(widget.questions); // map of ALL questions in the database
+    final List<dynamic> questions = decodedJson[widget.categoryId.toString()]
+        [widget.difficulty]; // list of questions
+    final List<dynamic> shuffledQuestions = List.from(questions)
+      ..shuffle(); // shuffle the questions
+    if (shuffledQuestions.length < widget.numOfQuestions) {
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text('Error'),
+              content: const Text(
+                  'There are not enough questions in the category/difficulty combination you selected. Please try again with different settings, or change the questions source.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        '/', (Route<dynamic> route) => false);
+                  },
+                  child: const Text('OK'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (context) => NavigationWidget(
+                                databaseCodename: widget.databaseCodename,
+                                databaseName: widget.databaseName,
+                                databaseSavefile: widget.databaseSavefile,
+                                databaseUrl: widget.databaseUrl,
+                                selectedIndex: 2)),
+                        (Route<dynamic> route) => false);
+                  },
+                  child: const Text('Settings'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } else {
+      print(shuffledQuestions);
+      setState(() {
+        _decodedJson = {
+          'results': shuffledQuestions.sublist(0, widget.numOfQuestions)
+        };
+        _answersForAll =
+            _decodedJson?['results'].map<List<dynamic>>((question) {
+          List<dynamic> answers =
+              question['incorrect_answers'] + [question['correct_answer']];
+          answers.shuffle();
+          return answers
+              .map((answer) => htmlParser.parse(answer).documentElement?.text)
+              .toList();
+        }).toList();
+        _currentQuestionBody = htmlParser
+                .parse(_decodedJson?['results'][_currentQuestion]['question'])
+                .documentElement
+                ?.text ??
+            'loading...'; // Decode question
+        _clickable = true;
+      });
+    }
+    // select only the number of questions that is needed
+  }
+
+  Future<void> _fetchQuestions() async {
+    if (widget.databaseType == 'api') {
+      await _fetchQuestionsFromApi();
+    } else {
+      await _fetchQuestionsFromLocal();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_decodedJson == null) {
       _fetchQuestions();
     } else if (_currentQuestion < _decodedJson?['results'].length) {
-      _currentQuestionBody = htmlParser
-              .parse(_decodedJson?['results'][_currentQuestion]['question'])
-              .documentElement
-              ?.text ??
-          'loading...';
-      _currentQuestionAnswers = _answersForAll[_currentQuestion];
-      _currentQuestionCorrectAnswer = htmlParser
-              .parse(
-                  _decodedJson?['results'][_currentQuestion]['correct_answer'])
-              .documentElement
-              ?.text ??
-          '...';
+      setState(() {
+        _currentQuestionBody = htmlParser
+                .parse(_decodedJson?['results'][_currentQuestion]['question'])
+                .documentElement
+                ?.text ??
+            'loading...';
+        _currentQuestionAnswers = _answersForAll[_currentQuestion];
+        _currentQuestionCorrectAnswer = htmlParser
+                .parse(_decodedJson?['results'][_currentQuestion]
+                    ['correct_answer'])
+                .documentElement
+                ?.text ??
+            '...';
+      });
     }
     // I have NO IDEA how to add loading screen here, but I need to do something about the delay in fetching the questions
     // TODO: add loading screen

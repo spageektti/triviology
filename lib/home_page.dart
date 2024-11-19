@@ -39,6 +39,9 @@ class HomePage extends StatefulWidget {
   final String databaseUrl;
   final String databaseCodename;
   final String databaseSavefile;
+  final String databaseType = "";
+  final String apiUrl = "";
+  final String questions = "";
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -72,6 +75,9 @@ class _HomePageState extends State<HomePage> {
     {'icon': Icons.animation, 'text': 'Cartoon & Animations', 'id': 32},
   ];
   bool _categoriesLoaded = false;
+  String _databaseType = "";
+  String _apiUrl = "";
+  String _questions = "";
 
   Future<void> loadCategories() async {
     if (widget.databaseCodename == 'opentdbapi') {
@@ -85,7 +91,12 @@ class _HomePageState extends State<HomePage> {
           File('${directory.path}/${widget.databaseCodename}.json');
       if (await databaseJson.exists()) {
         final database = await databaseJson.readAsString();
-        final categories = jsonDecode(database)['categories'];
+        final decodedJson = jsonDecode(database);
+        final categories = decodedJson['categories'];
+        final databaseType = decodedJson['type'];
+        final apiUrl = databaseType == "api" ? decodedJson['api_url'] : "none";
+        final questions =
+            databaseType != "api" ? decodedJson['questions'] : "{}";
         print(categories);
         setState(() {
           _categories.clear();
@@ -97,6 +108,9 @@ class _HomePageState extends State<HomePage> {
               'id': category['id'],
             };
           })));
+          _databaseType = databaseType;
+          _apiUrl = apiUrl;
+          _questions = jsonEncode(questions);
           _categoriesLoaded = true;
         });
       } else {
@@ -181,7 +195,10 @@ class _HomePageState extends State<HomePage> {
                             databaseName: widget.databaseName,
                             databaseUrl: widget.databaseUrl,
                             databaseCodename: widget.databaseCodename,
-                            databaseSavefile: widget.databaseSavefile);
+                            databaseSavefile: widget.databaseSavefile,
+                            databaseType: _databaseType,
+                            apiUrl: _apiUrl,
+                            questions: _questions);
                       }));
                     },
                     customBorder: RoundedRectangleBorder(
