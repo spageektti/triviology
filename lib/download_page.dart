@@ -97,7 +97,7 @@ final List<DownloadItem> downloadItems = [
       githubOrg: 'triviology',
       githubRepo: 'tldrpages-pl',
       version: 'v1.0.0',
-      language: 'Polish',
+      language: 'Polish / Polski',
       flag: 'PL',
       copyright: 'CC BY-SA 4.0 opentdb.com'),
   DownloadItem(
@@ -107,9 +107,18 @@ final List<DownloadItem> downloadItems = [
       githubOrg: 'triviology',
       githubRepo: 'tldrpages-de',
       version: 'v1.0.0',
-      language: 'German',
+      language: 'German / Deutsch',
       flag: 'DE',
       copyright: 'CC BY-SA 4.0 opentdb.com'),
+  DownloadItem(
+      name: 'Test Database',
+      description: 'To test triviology features. No real questions.',
+      githubOrg: 'triviology',
+      githubRepo: 'test-database',
+      version: 'v1.0.0',
+      language: 'English',
+      flag: 'GB',
+      copyright: 'None'),
 ];
 
 class _DownloadPageState extends State<DownloadPage> {

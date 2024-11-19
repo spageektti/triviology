@@ -25,6 +25,7 @@ import 'package:triviology/download_page.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'dart:convert';
+import 'package:flutter/services.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage(
@@ -210,19 +211,19 @@ class _SettingsPageState extends State<SettingsPage> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Success'),
-            content: const Text('Settings have been updated.'),
+            content: const Text(
+                'Settings have been updated. Please close the app and launch it again to apply the changes.'),
             actions: <Widget>[
               TextButton(
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Icon(Icons.refresh),
-                    Text('Reload'),
+                    Icon(Icons.close_rounded),
+                    Text('Close the app'),
                   ],
                 ),
                 onPressed: () {
-                  Navigator.of(context)
-                      .pushNamedAndRemoveUntil('/', (route) => false);
+                  SystemNavigator.pop();
                 },
               ),
             ],

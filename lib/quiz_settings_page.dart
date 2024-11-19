@@ -31,7 +31,10 @@ class QuizSettingsPage extends StatefulWidget {
       required this.databaseName,
       required this.databaseUrl,
       required this.databaseCodename,
-      required this.databaseSavefile});
+      required this.databaseSavefile,
+      required this.databaseType,
+      required this.apiUrl,
+      required this.questions});
 
   final int categoryId;
   final String categoryName;
@@ -39,6 +42,9 @@ class QuizSettingsPage extends StatefulWidget {
   final String databaseUrl;
   final String databaseCodename;
   final String databaseSavefile;
+  final String databaseType;
+  final String apiUrl;
+  final String questions;
 
   @override
   _QuizSettingsPageState createState() => _QuizSettingsPageState();
@@ -345,6 +351,9 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                       databaseUrl: widget.databaseUrl,
                       databaseCodename: widget.databaseCodename,
                       databaseSavefile: widget.databaseSavefile,
+                      databaseType: widget.databaseType,
+                      apiUrl: widget.apiUrl,
+                      questions: widget.questions,
                     );
                   }), (route) => false);
                 } else {
