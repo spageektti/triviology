@@ -161,12 +161,17 @@ class _QuizPageState extends State<QuizPage> {
   Future<void> _fetchQuestionsFromLocal() async {
     final Map<String, dynamic> decodedJson =
         jsonDecode(widget.questions); // map of ALL questions in the database
+    print(decodedJson);
     final List<dynamic> questions = decodedJson[widget.categoryId.toString()]
         [widget.difficulty]; // list of questions
+    print(questions);
     final List<dynamic> shuffledQuestions = List.from(questions)
       ..shuffle(); // shuffle the questions
     if (shuffledQuestions.length < widget.numOfQuestions) {
       if (mounted) {
+        // I know it is not the best solution, but It works for now
+        await Future.delayed(const Duration(seconds: 1));
+
         showDialog(
           context: context,
           builder: (context) {
@@ -202,7 +207,6 @@ class _QuizPageState extends State<QuizPage> {
         );
       }
     } else {
-      print(shuffledQuestions);
       setState(() {
         _decodedJson = {
           'results': shuffledQuestions.sublist(0, widget.numOfQuestions)
@@ -238,7 +242,11 @@ class _QuizPageState extends State<QuizPage> {
   @override
   Widget build(BuildContext context) {
     if (_decodedJson == null) {
-      _fetchQuestions();
+      _fetchQuestions().then((_) {
+        setState(() {}); // Ensure the widget rebuilds after fetching questions
+        // I do not know why I have to do this (It just should refresh because the setState is called somewhere else), but it works
+        // Rule number 1 of programming: If it works, don't touch it
+      });
     } else if (_currentQuestion < _decodedJson?['results'].length) {
       setState(() {
         _currentQuestionBody = htmlParser
@@ -253,6 +261,8 @@ class _QuizPageState extends State<QuizPage> {
                 .documentElement
                 ?.text ??
             '...';
+        print(_currentQuestionCorrectAnswer);
+        print(_currentQuestionAnswers);
       });
     }
     // I have NO IDEA how to add loading screen here, but I need to do something about the delay in fetching the questions
