@@ -29,20 +29,21 @@ import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as htmlParser;
 
 class QuizPage extends StatefulWidget {
-  const QuizPage(
-      {super.key,
-      required this.categoryId,
-      required this.categoryName,
-      required this.numOfQuestions,
-      required this.difficulty,
-      required this.questionType,
-      required this.databaseName,
-      required this.databaseUrl,
-      required this.databaseCodename,
-      required this.databaseSavefile,
-      required this.databaseType,
-      required this.apiUrl,
-      required this.questions});
+  const QuizPage({
+    super.key,
+    required this.categoryId,
+    required this.categoryName,
+    required this.numOfQuestions,
+    required this.difficulty,
+    required this.questionType,
+    required this.databaseName,
+    required this.databaseUrl,
+    required this.databaseCodename,
+    required this.databaseSavefile,
+    required this.databaseType,
+    required this.apiUrl,
+    required this.questions,
+  });
 
   final int categoryId;
   final String categoryName;
@@ -162,8 +163,16 @@ class _QuizPageState extends State<QuizPage> {
     final Map<String, dynamic> decodedJson =
         jsonDecode(widget.questions); // map of ALL questions in the database
     print(decodedJson);
-    final List<dynamic> questions = decodedJson[widget.categoryId.toString()]
-        [widget.difficulty]; // list of questions
+    final List<dynamic> questions = widget.questionType == 'boolean'
+        ? decodedJson['boolean'][widget.categoryId.toString()]
+            [widget.difficulty]
+        : widget.questionType == 'multiple'
+            ? decodedJson['multiple'][widget.categoryId.toString()]
+                [widget.difficulty]
+            : decodedJson['boolean'][widget.categoryId.toString()]
+                    [widget.difficulty] +
+                decodedJson['multiple'][widget.categoryId.toString()]
+                    [widget.difficulty]; // list of questions
     print(questions);
     final List<dynamic> shuffledQuestions = List.from(questions)
       ..shuffle(); // shuffle the questions
@@ -172,39 +181,41 @@ class _QuizPageState extends State<QuizPage> {
         // I know it is not the best solution, but It works for now
         await Future.delayed(const Duration(seconds: 1));
 
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: const Text('Error'),
-              content: const Text(
-                  'There are not enough questions in the category/difficulty combination you selected. Please try again with different settings, or change the questions source.'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        '/', (Route<dynamic> route) => false);
-                  },
-                  child: const Text('OK'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(
-                            builder: (context) => NavigationWidget(
-                                databaseCodename: widget.databaseCodename,
-                                databaseName: widget.databaseName,
-                                databaseSavefile: widget.databaseSavefile,
-                                databaseUrl: widget.databaseUrl,
-                                selectedIndex: 2)),
-                        (Route<dynamic> route) => false);
-                  },
-                  child: const Text('Settings'),
-                ),
-              ],
-            );
-          },
-        );
+        if (mounted) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text('Error'),
+                content: const Text(
+                    'There are not enough questions in the category/difficulty combination you selected. Please try again with different settings, or change the questions source.'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          '/', (Route<dynamic> route) => false);
+                    },
+                    child: const Text('OK'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                              builder: (context) => NavigationWidget(
+                                  databaseCodename: widget.databaseCodename,
+                                  databaseName: widget.databaseName,
+                                  databaseSavefile: widget.databaseSavefile,
+                                  databaseUrl: widget.databaseUrl,
+                                  selectedIndex: 2)),
+                          (Route<dynamic> route) => false);
+                    },
+                    child: const Text('Settings'),
+                  ),
+                ],
+              );
+            },
+          );
+        }
       }
     } else {
       setState(() {

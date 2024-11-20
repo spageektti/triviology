@@ -20,6 +20,8 @@
 ! To contribute, please read the CONTRIBUTING.md file in the root of the project.
 ? It contains important information about the project structure, code style, suggested VSCode extensions, and more.
 */
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:triviology/quiz_page.dart';
 
@@ -34,7 +36,8 @@ class QuizSettingsPage extends StatefulWidget {
       required this.databaseSavefile,
       required this.databaseType,
       required this.apiUrl,
-      required this.questions});
+      required this.questions,
+      required this.questionCount});
 
   final int categoryId;
   final String categoryName;
@@ -45,19 +48,34 @@ class QuizSettingsPage extends StatefulWidget {
   final String databaseType;
   final String apiUrl;
   final String questions;
+  final String questionCount;
 
   @override
   _QuizSettingsPageState createState() => _QuizSettingsPageState();
 }
 
 class _QuizSettingsPageState extends State<QuizSettingsPage> {
-  int _numOfQuestions = 5;
+  int _numOfQuestions = 1;
   String _difficulty = 'easy';
   String _questionType = 'multiple';
   int _current_setting = 0;
+  int _countOfQuestionsForCurrentSetting = 25;
+
+  late Map<dynamic, dynamic> _decodedQuestionCount;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.apiUrl == "None") {
+      _decodedQuestionCount = jsonDecode(widget.questionCount);
+    } else {
+      _decodedQuestionCount = {};
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    print(_decodedQuestionCount);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Quiz Settings'),
@@ -66,13 +84,19 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (_current_setting == 0) ...[
+            if (_current_setting == 2) ...[
               const Text('Number of questions:'),
               Slider(
                 value: _numOfQuestions.toDouble(),
                 min: 1,
-                max: 50,
-                divisions: 49,
+                max: widget.apiUrl == "None"
+                    ? _countOfQuestionsForCurrentSetting * 1.0
+                    : 25,
+                divisions: widget.apiUrl == "None"
+                    ? (_countOfQuestionsForCurrentSetting > 1
+                        ? _countOfQuestionsForCurrentSetting - 1
+                        : 1)
+                    : 24,
                 label: _numOfQuestions.toString(),
                 onChanged: (double value) {
                   setState(() {
@@ -81,7 +105,7 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                 },
               ),
             ],
-            if (_current_setting == 1) ...[
+            if (_current_setting == 0) ...[
               /*const Text('Difficulty:'),
               Slider(
                 value: _difficulty == 'easy'
@@ -109,11 +133,12 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                   });
                 },
               ),*/
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              Wrap(
+                alignment: WrapAlignment.spaceEvenly,
                 children: [
                   SizedBox(
                     height: 150,
+                    width: 140,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Card(
@@ -140,6 +165,7 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                   ),
                   SizedBox(
                     height: 150,
+                    width: 140,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Card(
@@ -149,6 +175,7 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                             const Text('Medium',
                                 style: TextStyle(fontSize: 20)),
                             const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(Icons.star_rounded, color: Colors.yellow),
                                 Icon(Icons.star_rounded, color: Colors.yellow),
@@ -171,6 +198,7 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                   ),
                   SizedBox(
                     height: 150,
+                    width: 140,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Card(
@@ -179,6 +207,7 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                           children: [
                             const Text('Hard', style: TextStyle(fontSize: 20)),
                             const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(Icons.star_rounded, color: Colors.yellow),
                                 Icon(Icons.star_rounded, color: Colors.yellow),
@@ -203,7 +232,7 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                 ],
               ),
             ],
-            if (_current_setting == 2) ...[
+            if (_current_setting == 1) ...[
               const Text('Question type:'),
               /*Slider(
                 value: _questionType == 'boolean'
@@ -229,11 +258,12 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                   });
                 },
               ),*/
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              Wrap(
+                alignment: WrapAlignment.spaceEvenly,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
                     child: SizedBox(
                       width: 140,
                       child: Card(
@@ -267,7 +297,8 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
                     child: SizedBox(
                       width: 140,
                       child: Card(
@@ -305,7 +336,8 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
                     child: SizedBox(
                       width: 140,
                       child: Card(
@@ -336,6 +368,14 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
             ],
             ElevatedButton(
               onPressed: () {
+                if (widget.apiUrl == "None") {
+                  print(_decodedQuestionCount[widget.categoryId.toString()]
+                      [_difficulty][_questionType]);
+                  _countOfQuestionsForCurrentSetting =
+                      _decodedQuestionCount[widget.categoryId.toString()]
+                          [_difficulty][_questionType];
+                }
+                print(widget.databaseType);
                 if (_current_setting == 2) {
                   print(
                       'Quiz started with $_numOfQuestions questions, $_difficulty difficulty, and $_questionType question type.');

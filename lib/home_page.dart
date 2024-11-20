@@ -39,7 +39,6 @@ class HomePage extends StatefulWidget {
   final String databaseUrl;
   final String databaseCodename;
   final String databaseSavefile;
-  final String databaseType = "";
   final String apiUrl = "";
   final String questions = "";
 
@@ -78,46 +77,51 @@ class _HomePageState extends State<HomePage> {
   String _databaseType = "";
   String _apiUrl = "";
   String _questions = "";
+  String _questionCount = "";
 
   Future<void> loadCategories() async {
-    if (widget.databaseCodename == 'opentdbapi') {
-      // so it doesn't have to load
+    final directory = await getApplicationDocumentsDirectory();
+    final databaseJson =
+        File('${directory.path}/${widget.databaseCodename}.json');
+    if (await databaseJson.exists()) {
+      final database = await databaseJson.readAsString();
+      final decodedJson = jsonDecode(database);
+      final categories = decodedJson['categories'];
+      final databaseType = decodedJson['type'];
+      final apiUrl = databaseType == "api" ? decodedJson['api_url'] : "None";
+      final booleanQuestions =
+          databaseType != "api" ? decodedJson['questions_boolean'] : "{}";
+      final multipleQuestions =
+          databaseType != "api" ? decodedJson['questions_multiple'] : "{}";
+      final questions = {
+        'boolean': booleanQuestions,
+        'multiple': multipleQuestions,
+      };
+      final questionCount =
+          databaseType != "api" ? decodedJson['question_count'] : "{}";
+      print(categories);
+      setState(() {
+        _categories.clear();
+        _categories
+            .addAll(List<Map<String, dynamic>>.from(categories.map((category) {
+          return {
+            'icon': getIconData(category['icon']),
+            'text': category['text'],
+            'id': category['id'],
+          };
+        })));
+        _databaseType = databaseType;
+        _apiUrl = apiUrl;
+        _questions = jsonEncode(questions);
+        _questionCount = jsonEncode(questionCount);
+        _categoriesLoaded = true;
+        print(_databaseType);
+        print(_questions);
+      });
+    } else {
       setState(() {
         _categoriesLoaded = true;
       });
-    } else {
-      final directory = await getApplicationDocumentsDirectory();
-      final databaseJson =
-          File('${directory.path}/${widget.databaseCodename}.json');
-      if (await databaseJson.exists()) {
-        final database = await databaseJson.readAsString();
-        final decodedJson = jsonDecode(database);
-        final categories = decodedJson['categories'];
-        final databaseType = decodedJson['type'];
-        final apiUrl = databaseType == "api" ? decodedJson['api_url'] : "none";
-        final questions =
-            databaseType != "api" ? decodedJson['questions'] : "{}";
-        print(categories);
-        setState(() {
-          _categories.clear();
-          _categories.addAll(
-              List<Map<String, dynamic>>.from(categories.map((category) {
-            return {
-              'icon': getIconData(category['icon']),
-              'text': category['text'],
-              'id': category['id'],
-            };
-          })));
-          _databaseType = databaseType;
-          _apiUrl = apiUrl;
-          _questions = jsonEncode(questions);
-          _categoriesLoaded = true;
-        });
-      } else {
-        setState(() {
-          _categoriesLoaded = true;
-        });
-      }
     }
   }
 
@@ -198,7 +202,8 @@ class _HomePageState extends State<HomePage> {
                             databaseSavefile: widget.databaseSavefile,
                             databaseType: _databaseType,
                             apiUrl: _apiUrl,
-                            questions: _questions);
+                            questions: _questions,
+                            questionCount: _questionCount);
                       }));
                     },
                     customBorder: RoundedRectangleBorder(
