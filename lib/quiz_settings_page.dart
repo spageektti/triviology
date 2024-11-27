@@ -84,27 +84,6 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (_current_setting == 2) ...[
-              const Text('Number of questions:'),
-              Slider(
-                value: _numOfQuestions.toDouble(),
-                min: 1,
-                max: widget.apiUrl == "None"
-                    ? _countOfQuestionsForCurrentSetting * 1.0
-                    : 25,
-                divisions: widget.apiUrl == "None"
-                    ? (_countOfQuestionsForCurrentSetting > 1
-                        ? _countOfQuestionsForCurrentSetting - 1
-                        : 1)
-                    : 24,
-                label: _numOfQuestions.toString(),
-                onChanged: (double value) {
-                  setState(() {
-                    _numOfQuestions = value.toInt();
-                  });
-                },
-              ),
-            ],
             if (_current_setting == 0) ...[
               /*const Text('Difficulty:'),
               Slider(
@@ -366,45 +345,82 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                 ],
               ),
             ],
-            ElevatedButton(
-              onPressed: () {
-                if (widget.apiUrl == "None") {
-                  print(_decodedQuestionCount[widget.categoryId.toString()]
-                      [_difficulty][_questionType]);
-                  _countOfQuestionsForCurrentSetting =
-                      _decodedQuestionCount[widget.categoryId.toString()]
-                          [_difficulty][_questionType];
-                }
-                print(widget.databaseType);
-                if (_current_setting == 2) {
-                  print(
-                      'Quiz started with $_numOfQuestions questions, $_difficulty difficulty, and $_questionType question type.');
-                  Navigator.pushAndRemoveUntil(context,
-                      MaterialPageRoute(builder: (context) {
-                    return QuizPage(
-                      categoryId: widget.categoryId,
-                      categoryName: widget.categoryName,
-                      numOfQuestions: _numOfQuestions,
-                      difficulty: _difficulty,
-                      questionType: _questionType,
-                      databaseName: widget.databaseName,
-                      databaseUrl: widget.databaseUrl,
-                      databaseCodename: widget.databaseCodename,
-                      databaseSavefile: widget.databaseSavefile,
-                      databaseType: widget.databaseType,
-                      apiUrl: widget.apiUrl,
-                      questions: widget.questions,
-                    );
-                  }), (route) => false);
-                } else {
+            if (_current_setting == 2) ...[
+              const Text('Number of questions:'),
+              Slider(
+                value: _numOfQuestions.toDouble(),
+                min: 1,
+                max: widget.apiUrl == "None"
+                    ? _countOfQuestionsForCurrentSetting * 1.0
+                    : 25,
+                divisions: widget.apiUrl == "None"
+                    ? (_countOfQuestionsForCurrentSetting > 1
+                        ? _countOfQuestionsForCurrentSetting - 1
+                        : 1)
+                    : 24,
+                label: _numOfQuestions.toString(),
+                onChanged: (double value) {
                   setState(() {
-                    _current_setting++;
+                    _numOfQuestions = value.toInt();
                   });
-                }
-              },
-              child: _current_setting == 2
-                  ? const Text('Start Quiz')
-                  : const Text('Next'),
+                },
+              ),
+            ],
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (_current_setting > 0) ...[
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _current_setting--;
+                      });
+                    },
+                    child: const Text('Previous'),
+                  ),
+                ],
+                ElevatedButton(
+                  onPressed: () {
+                    if (widget.apiUrl == "None") {
+                      print(_decodedQuestionCount[widget.categoryId.toString()]
+                          [_difficulty][_questionType]);
+                      _countOfQuestionsForCurrentSetting =
+                          _decodedQuestionCount[widget.categoryId.toString()]
+                              [_difficulty][_questionType];
+                    }
+                    print(widget.databaseType);
+                    if (_current_setting == 2) {
+                      print(
+                          'Quiz started with $_numOfQuestions questions, $_difficulty difficulty, and $_questionType question type.');
+                      Navigator.pushAndRemoveUntil(context,
+                          MaterialPageRoute(builder: (context) {
+                        return QuizPage(
+                          categoryId: widget.categoryId,
+                          categoryName: widget.categoryName,
+                          numOfQuestions: _numOfQuestions,
+                          difficulty: _difficulty,
+                          questionType: _questionType,
+                          databaseName: widget.databaseName,
+                          databaseUrl: widget.databaseUrl,
+                          databaseCodename: widget.databaseCodename,
+                          databaseSavefile: widget.databaseSavefile,
+                          databaseType: widget.databaseType,
+                          apiUrl: widget.apiUrl,
+                          questions: widget.questions,
+                        );
+                      }), (route) => false);
+                    } else {
+                      setState(() {
+                        _current_setting++;
+                      });
+                    }
+                  },
+                  child: _current_setting == 2
+                      ? const Text('Start Quiz')
+                      : const Text('Next'),
+                ),
+              ],
             ),
           ],
         ),
