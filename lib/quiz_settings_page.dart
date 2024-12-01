@@ -60,6 +60,7 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
   String _questionType = 'multiple';
   int _current_setting = 0;
   int _countOfQuestionsForCurrentSetting = 25;
+  int _secondsPerQuestion = 0;
 
   late Map<dynamic, dynamic> _decodedQuestionCount;
 
@@ -366,11 +367,28 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                 },
               ),
             ],
+            if (_current_setting == 3) ...[
+              const Text('Number of seconds to answer each question:'),
+              Slider(
+                value: _secondsPerQuestion.toDouble(),
+                min: 0,
+                max: 30,
+                divisions: 15,
+                label: _secondsPerQuestion == 0
+                    ? 'Unlimited'
+                    : _secondsPerQuestion.toString(),
+                onChanged: (double value) {
+                  setState(() {
+                    _secondsPerQuestion = value.toInt();
+                  });
+                },
+              ),
+            ],
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (_current_setting > 0) ...[
-                  const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
                       setState(() {
@@ -379,6 +397,7 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                     },
                     child: const Text('Previous'),
                   ),
+                  const SizedBox(width: 20),
                 ],
                 ElevatedButton(
                   onPressed: () {
@@ -390,7 +409,7 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                               [_difficulty][_questionType];
                     }
                     print(widget.databaseType);
-                    if (_current_setting == 2) {
+                    if (_current_setting == 3) {
                       print(
                           'Quiz started with $_numOfQuestions questions, $_difficulty difficulty, and $_questionType question type.');
                       Navigator.pushAndRemoveUntil(context,
@@ -408,6 +427,7 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                           databaseType: widget.databaseType,
                           apiUrl: widget.apiUrl,
                           questions: widget.questions,
+                          secondsPerQuestion: _secondsPerQuestion,
                         );
                       }), (route) => false);
                     } else {
@@ -416,7 +436,7 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                       });
                     }
                   },
-                  child: _current_setting == 2
+                  child: _current_setting == 3
                       ? const Text('Start Quiz')
                       : const Text('Next'),
                 ),

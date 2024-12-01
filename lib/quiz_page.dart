@@ -43,6 +43,7 @@ class QuizPage extends StatefulWidget {
     required this.databaseType,
     required this.apiUrl,
     required this.questions,
+    required this.secondsPerQuestion,
   });
 
   final int categoryId;
@@ -57,6 +58,7 @@ class QuizPage extends StatefulWidget {
   final String databaseType;
   final String apiUrl;
   final String questions;
+  final int secondsPerQuestion;
 
   @override
   _QuizPageState createState() => _QuizPageState();
@@ -77,6 +79,7 @@ class _QuizPageState extends State<QuizPage> {
       0; // I know it may look weird but this achievement is as hard to get as the correct answers streak because you need to always answer wrong
   int _maxCorrectAnswersStreak = 0;
   int _maxIncorrectAnswersStreak = 0;
+  int _secondsLeft = 0;
 
   Map<String, dynamic>? _decodedJson;
   Future<void> _fetchQuestionsFromApi() async {
@@ -250,6 +253,72 @@ class _QuizPageState extends State<QuizPage> {
     }
   }
 
+  Future<void> _timer() async {
+    if (mounted) {
+      final currentQuestion = _currentQuestion;
+      setState(() {
+        _secondsLeft = widget.secondsPerQuestion;
+      });
+      while (
+          _secondsLeft > 0 && currentQuestion == _currentQuestion && mounted) {
+        await Future.delayed(const Duration(seconds: 1));
+        if (mounted)
+          setState(() {
+            _secondsLeft--;
+          });
+      }
+      if (currentQuestion != _currentQuestion) {
+        _timer();
+        return;
+      }
+      if (!mounted) return;
+      Future.delayed(const Duration(milliseconds: 400), () {
+        setState(() {
+          _showCardColor = true;
+        });
+        Future.delayed(const Duration(milliseconds: 1000), () {
+          setState(() {
+            {
+              _clickable = true;
+              _showCardColor = false;
+              _currentQuestion++;
+              _timer();
+            }
+          });
+        });
+      });
+      setState(() {
+        _clickable = false;
+      });
+      setState(() {
+        _correctAnswersStreak = 0;
+        _incorrectAnswersStreak = 0;
+      });
+      if (_currentQuestion == widget.numOfQuestions - 1) {
+        if (mounted) {
+          Future.delayed(const Duration(milliseconds: 1500), () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => QuizSummaryPage(
+                      categoryName: widget.categoryName,
+                      categoryId: widget.categoryId,
+                      numOfQuestions: widget.numOfQuestions,
+                      difficulty: widget.difficulty,
+                      questionType: widget.questionType,
+                      earnedExperience: _earnedExperience,
+                      correctlyAnsweredQuestions: _correctlyAnsweredQuestions,
+                      databaseName: widget.databaseName,
+                      databaseUrl: widget.databaseUrl,
+                      databaseCodename: widget.databaseCodename,
+                      databaseSavefile: widget.databaseSavefile,
+                      maxCorrectAnswersStreak: _maxCorrectAnswersStreak,
+                      maxIncorrectAnswersStreak: _maxIncorrectAnswersStreak,
+                    )));
+          });
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_decodedJson == null) {
@@ -258,6 +327,7 @@ class _QuizPageState extends State<QuizPage> {
         // I do not know why I have to do this (It just should refresh because the setState is called somewhere else), but it works
         // Rule number 1 of programming: If it works, don't touch it
       });
+      _timer();
     } else if (_currentQuestion < _decodedJson?['results'].length) {
       setState(() {
         _currentQuestionBody = htmlParser
@@ -283,6 +353,19 @@ class _QuizPageState extends State<QuizPage> {
       appBar: AppBar(
         title: Text(widget.categoryName),
         actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Text(
+              widget.secondsPerQuestion == 0 ? 'U' : '${_secondsLeft}s',
+              style: TextStyle(
+                color: _secondsLeft <= widget.secondsPerQuestion / 4
+                    ? Colors.redAccent
+                    : _secondsLeft <= widget.secondsPerQuestion / 2
+                        ? Colors.orangeAccent
+                        : Theme.of(context).textTheme.bodyLarge?.color,
+              ),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: Text('$_earnedExperience XP'),
