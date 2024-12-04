@@ -39,6 +39,7 @@ dependencies:
   html: ^0.15.5
   flutter_launcher_icons: ^0.14.1
   country_flags: ^3.0.0
+  supabase_flutter: ^2.8.1
 
 dev_dependencies:
   flutter_test:
