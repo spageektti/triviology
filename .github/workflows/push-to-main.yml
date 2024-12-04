@@ -65,7 +65,7 @@ jobs:
 
       - name: Update version name
         run: |
-          sed -i -E 's/(version: [0-9]+\.[0-9]+\.[0-9]+)\+([0-9]+)/\1.\2+\2/' pubspec.yaml
+          sed -i -E 's/version: ([0-9]+)\.([0-9]+)\.([0-9]+)\+([0-9]+)/version: \1.\2.\3\4+\4/' pubspec.yaml
 
       - name: Build APK
         run: flutter build apk --release
