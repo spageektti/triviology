@@ -26,6 +26,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:path_provider/path_provider.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 Future<void> saveData(
     totalQuestions,
@@ -258,9 +259,9 @@ class QuizSummaryPage extends StatelessWidget {
             Card(
               child: Column(
                 children: [
-                  const Text('Congratulations!',
+                  Text(context.tr("congratulations"),
                       style: TextStyle(fontSize: 30)),
-                  const Text('You have completed the quiz!',
+                  Text(context.tr("you-have-completed-the-quiz"),
                       style: TextStyle(fontSize: 20)),
                   Padding(
                     padding: const EdgeInsets.symmetric(
@@ -283,8 +284,8 @@ class QuizSummaryPage extends StatelessWidget {
                 ],
               ),
             ),
-            const Text(
-                'We updated your data. You can now view your stats in the Profile tab.'),
+            Text(
+                context.tr("we-have-updated-your-data")),
           ],
         ),
       ),

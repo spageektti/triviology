@@ -27,6 +27,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:triviology/database_settings_page.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage(
@@ -57,8 +58,8 @@ class _SettingsPageState extends State<SettingsPage> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: const Text('Success'),
-              content: const Text('Quiz results have been cleared.'),
+              title: Text(context.tr("success")),
+              content: Text(context.tr("quiz-results-cleared")),
               actions: <Widget>[
                 TextButton(
                   child: const Text('OK'),
@@ -77,8 +78,8 @@ class _SettingsPageState extends State<SettingsPage> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: const Text('Error'),
-                content: const Text('No quiz results to clear.'),
+                title: Text(context.tr("error")),
+                content: Text(context.tr("nothing-to-clear")),
                 actions: <Widget>[
                   TextButton(
                     child: const Text('OK'),
@@ -104,8 +105,8 @@ class _SettingsPageState extends State<SettingsPage> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: const Text('Success'),
-              content: const Text('Settings have been cleared.'),
+              title: Text(context.tr("success")),
+              content: Text(context.tr("settings-cleared")),
               actions: <Widget>[
                 TextButton(
                   child: const Row(
@@ -131,8 +132,8 @@ class _SettingsPageState extends State<SettingsPage> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: const Text('Error'),
-                content: const Text('No settings to clear.'),
+                title: Text(context.tr("error")),
+                content: Text(context.tr("no-settings-to-clear")),
                 actions: <Widget>[
                   TextButton(
                     child: const Text('OK'),
@@ -151,7 +152,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: Text(context.tr("settings")),
       ),
       body: Center(
         child: /*Column(
@@ -181,13 +182,8 @@ class _SettingsPageState extends State<SettingsPage> {
             ListView(
           children: [
             ListTile(
-              leading: const Icon(Icons.person),
-              title: const Text('Profile'),
-              onTap: () {},
-            ),
-            ListTile(
               leading: const Icon(Icons.storage),
-              title: const Text('Question Database'),
+              title: Text(context.tr("question-database")),
               onTap: () {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (context) {
@@ -199,15 +195,15 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             ListTile(
               leading: const Icon(Icons.delete),
-              title: const Text('Remove Data'),
+              title: Text(context.tr("remove-data")),
               onTap: () {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: const Text('Remove Data'),
-                      content: const Text(
-                        'Choose which data you want to delete from the app:',
+                      title: Text(context.tr("remove-data")),
+                      content: Text(
+                        context.tr("choose-data"),
                         style: TextStyle(fontSize: 18),
                       ),
                       actions: [
@@ -215,20 +211,20 @@ class _SettingsPageState extends State<SettingsPage> {
                           onPressed: () {
                             clearQuizResults();
                           },
-                          child: const Text('Quiz Results'),
+                          child: Text(context.tr("quiz-results")),
                         ),
                         TextButton(
                           onPressed: () {
                             clearSettings();
                           },
-                          child: const Text('Settings'),
+                          child: Text(context.tr("settings")),
                         ),
                         TextButton(
                             onPressed: () {
                               clearQuizResults();
                               clearSettings();
                             },
-                            child: const Text('All Data'))
+                            child: Text(context.tr("all-data")))
                       ],
                     );
                   },

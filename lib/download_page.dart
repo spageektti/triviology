@@ -25,6 +25,7 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:country_flags/country_flags.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class DownloadPage extends StatefulWidget {
   const DownloadPage({super.key});
@@ -61,6 +62,16 @@ class DownloadItem {
 // TODO: add feature to user custom datasets
 final List<DownloadItem> downloadItems = [
   DownloadItem(
+      name: 'Główna Baza Pytań',
+      description:
+          'Baza pytań przygotowana przez autora aplikacji',
+      githubOrg: 'triviology',
+      githubRepo: 'mainquestiondbpl',
+      version: 'v1.0.0',
+      language: 'Polish',
+      flag: 'PL',
+      copyright: 'CC BY-SA 4.0 opentdb.com'),
+  DownloadItem(
       name: 'Open Trivia Database API',
       description:
           'The Open Trivia Database API provides questions for 24 categories, with 3 difficulty levels, and 2 question types (multiple choice and true/false). It requires internet access tho.',
@@ -69,46 +80,6 @@ final List<DownloadItem> downloadItems = [
       version: 'v1.0.1',
       language: 'English',
       flag: 'GB',
-      copyright: 'CC BY-SA 4.0 opentdb.com'),
-  DownloadItem(
-      name: 'Open Trivia Database',
-      description:
-          'The Open Trivia Database provides questions for 24 categories, with 3 difficulty levels, and 2 question types (multiple choice and true/false). Questions are saved locally.',
-      githubOrg: 'triviology',
-      githubRepo: 'opentdb',
-      version: 'v1.0.0',
-      language: 'English',
-      flag: 'GB',
-      copyright: 'CC BY-SA 4.0 opentdb.com'),
-  DownloadItem(
-      name: 'TLDR Pages English',
-      description:
-          'The biggest tldr-pages dataset, asking questions about cli commands. Questions are grouped by platform (Windows, Linux, MacOS, etc.) and saved locally. No internet access needed after download.',
-      githubOrg: 'triviology',
-      githubRepo: 'tldrpages-en',
-      version: 'v1.0.0',
-      language: 'English',
-      flag: 'GB',
-      copyright: 'CC BY-SA 4.0 opentdb.com'),
-  DownloadItem(
-      name: 'TLDR Pages Polish',
-      description:
-          'tldr-pages dataset for the Polish language, asking questions about cli commands. Questions are grouped by platform (Windows, Linux, MacOS, etc.) and saved locally. No internet access needed after download.',
-      githubOrg: 'triviology',
-      githubRepo: 'tldrpages-pl',
-      version: 'v1.0.0',
-      language: 'Polish / Polski',
-      flag: 'PL',
-      copyright: 'CC BY-SA 4.0 opentdb.com'),
-  DownloadItem(
-      name: 'TLDR Pages German',
-      description:
-          'tldr-pages dataset for the German language, asking questions about cli commands. Questions are grouped by platform (Windows, Linux, MacOS, etc.) and saved locally. No internet access needed after download.',
-      githubOrg: 'triviology',
-      githubRepo: 'tldrpages-de',
-      version: 'v1.0.0',
-      language: 'German / Deutsch',
-      flag: 'DE',
       copyright: 'CC BY-SA 4.0 opentdb.com'),
   DownloadItem(
       name: 'Test Database',
@@ -165,9 +136,9 @@ class _DownloadPageState extends State<DownloadPage> {
           context: context,
           builder: (context) {
             return AlertDialog(
-              title: const Text('Download Failed'),
-              content: const Text(
-                  'Unable to download the file. Please check your internet connection and try again.'),
+              title: Text(context.tr("download-failed")),
+              content: Text(
+                  context.tr("download-failed-text")),
               actions: [
                 TextButton(
                   onPressed: () {
@@ -207,9 +178,10 @@ class _DownloadPageState extends State<DownloadPage> {
           context: context,
           builder: (context) {
             return AlertDialog(
-              title: const Text('Delete Failed'),
-              content: const Text(
-                  'Unable to delete the file. At least one dataset must be installed. Install another dataset before deleting this one.'),
+              title: Text(context.tr("delete-failed")),
+              content:  Text(
+                context.tr("delete-failed-text")
+                  ),
               actions: [
                 TextButton(
                   onPressed: () {
@@ -252,10 +224,10 @@ class _DownloadPageState extends State<DownloadPage> {
               const SizedBox(height: 16),
               Text(
                   'GitHub: ${downloadItems[index].githubOrg}/${downloadItems[index].githubRepo}'),
-              Text('Version: ${downloadItems[index].version}'),
+              Text('${context.tr("version")}: ${downloadItems[index].version}'),
               Row(
                 children: [
-                  const Text('Language: '),
+                  Text('${context.tr("language")}: '),
                   CountryFlag.fromCountryCode(
                     downloadItems[index].flag,
                     shape: const RoundedRectangle(4),
@@ -286,11 +258,11 @@ class _DownloadPageState extends State<DownloadPage> {
                           deleteItem(index);
                           Navigator.pop(context);
                         },
-                        child: const Row(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Icon(Icons.delete_forever_rounded),
-                            Text('Delete'),
+                            Text(context.tr("delete")),
                           ],
                         ),
                       ),
@@ -311,7 +283,7 @@ class _DownloadPageState extends State<DownloadPage> {
                               const SizedBox(
                                 width: 5,
                               ),
-                              Text(_needsUpdate[index] ? 'Update' : 'Download'),
+                              Text(_needsUpdate[index] ? context.tr("update") : context.tr("download")),
                             ],
                           )),
                   ],
@@ -323,11 +295,11 @@ class _DownloadPageState extends State<DownloadPage> {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: const Row(
+                      child:  Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Icon(Icons.close_rounded),
-                          Text('Close'),
+                          Text(context.tr("close")),
                         ],
                       ),
                     ),
@@ -348,7 +320,7 @@ class _DownloadPageState extends State<DownloadPage> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Download Page'),
+        title:  Text(context.tr("download-page")),
       ),
       body: Center(
         child: ListView.builder(

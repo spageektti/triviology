@@ -24,6 +24,7 @@ import 'package:flutter/material.dart';
 import 'package:triviology/home_page.dart';
 import 'package:triviology/stats_page.dart';
 import 'package:triviology/settings_page.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class NavigationWidget extends StatefulWidget {
   final int selectedIndex;
@@ -97,18 +98,18 @@ class _NavigationWidgetState extends State<NavigationWidget> {
         },
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Home',
+            label: context.tr('home'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.insert_chart_outlined_outlined),
-            label: 'Stats',
+            label: context.tr('stats'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
-            label: 'Settings',
+            label: context.tr('settings'),
           ),
         ],
         currentIndex: _selectedIndex,

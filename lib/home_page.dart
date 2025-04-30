@@ -26,6 +26,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
 import 'package:triviology/icon_mapper.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage(
@@ -133,7 +134,7 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Select a category'),
+        title: Text(context.tr('select-category')),
         actions: [
           IconButton(
             icon: const Icon(Icons.info_outline_rounded),
@@ -142,16 +143,16 @@ class _HomePageState extends State<HomePage> {
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    title: const Text('Information'),
+                    title: Text(context.tr('info')),
                     content: Column(
                       children: [
-                        const Text(
-                            'App made with love by Wiktor Perskawiec (@spageektti)'),
-                        const Text(
-                            'The app\'s source code is available on GitHub'),
-                        const Text(
-                            'The app is licensed under the GPLv3 License'),
-                        Text('Database used: ${widget.databaseName}'),
+                         Text(
+                            context.tr('info-text1')),
+                        Text(
+                            context.tr('info-text2')),
+                        Text(
+                            context.tr('info-text3')),
+                        Text('${context.tr('info-text4')}: ${widget.databaseName}'),
                       ],
                     ),
                     actions: <Widget>[
@@ -164,9 +165,9 @@ class _HomePageState extends State<HomePage> {
                       TextButton(onPressed: () {}, child: const Text('GitHub')),
                       TextButton(
                           onPressed: () {},
-                          child: const Text('License (GPLv3)')),
+                          child: Text(context.tr('license'))),
                       TextButton(
-                          onPressed: () {}, child: const Text('Database')),
+                          onPressed: () {}, child:  Text(context.tr("database"))),
                     ],
                   );
                 },

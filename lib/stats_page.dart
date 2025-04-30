@@ -27,6 +27,7 @@ import 'dart:io';
 import 'achievements_page.dart';
 import 'dart:math';
 import 'package:triviology/icon_mapper.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class StatsPage extends StatefulWidget {
   const StatsPage(
@@ -240,7 +241,7 @@ class _StatsPageState extends State<StatsPage> {
           ),
           DropdownButton<int>(
             value: _selectedCategory,
-            hint: const Text('Select a category'),
+            hint: Text(context.tr('select-category')),
             items: _categories.map((category) {
               return DropdownMenuItem<int>(
                 value: category['id'],
@@ -262,7 +263,7 @@ class _StatsPageState extends State<StatsPage> {
                   height: 20,
                 ),
                 Text(
-                    'Level ${_totalExperience == 0 ? 0 : log2(_totalExperience).floor()}',
+                    '${context.tr('level')} ${_totalExperience == 0 ? 0 : log2(_totalExperience).floor()}',
                     style: const TextStyle(fontSize: 18)),
                 Column(
                   children: [
@@ -288,7 +289,7 @@ class _StatsPageState extends State<StatsPage> {
                     Padding(
                       padding: const EdgeInsets.only(top: 5),
                       child: Text(
-                          '${_totalExperience == 0 ? 0 : (_totalExperience / (pow(2, log2(_totalExperience).floor()) * 2) * 100).toStringAsFixed(2)}% of next level ($_totalExperience/${_totalExperience == 0 ? 0 : (pow(2, log2(_totalExperience).floor()) * 2)} XP)'),
+                          '${_totalExperience == 0 ? 0 : (_totalExperience / (pow(2, log2(_totalExperience).floor()) * 2) * 100).toStringAsFixed(2)}% ${context.tr('of-next-level')} ($_totalExperience/${_totalExperience == 0 ? 0 : (pow(2, log2(_totalExperience).floor()) * 2)} XP)'),
                     ),
                   ],
                 ),
@@ -298,16 +299,16 @@ class _StatsPageState extends State<StatsPage> {
                 Card(
                   child: Column(
                     children: [
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.only(bottom: 5),
-                        child: Text('Easy',
+                        child: Text(context.tr('easy'),
                             style:
                                 TextStyle(color: Colors.green, fontSize: 20)),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 5),
                         child: Text(
-                            '$_easyCorrect/$_easyTotal questions answered correctly in $_easyQuizes quizzes'),
+                            '$_easyCorrect/$_easyTotal ${context.tr('questions-answered-correctly-in')} $_easyQuizes ${context.tr('quizzes')}'),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -340,16 +341,16 @@ class _StatsPageState extends State<StatsPage> {
                 Card(
                   child: Column(
                     children: [
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.only(bottom: 5),
-                        child: Text('Medium',
+                        child: Text(context.tr('medium'),
                             style:
                                 TextStyle(color: Colors.yellow, fontSize: 20)),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 5),
                         child: Text(
-                            '$_mediumCorrect/$_mediumTotal questions answered correctly in $_mediumQuizes quizzes'),
+                            '$_mediumCorrect/$_mediumTotal ${context.tr('questions-answered-correctly-in')} $_mediumQuizes ${context.tr('quizzes')}'),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -382,15 +383,15 @@ class _StatsPageState extends State<StatsPage> {
                 Card(
                   child: Column(
                     children: [
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.only(bottom: 5),
-                        child: Text('Hard',
+                        child: Text(context.tr('hard'),
                             style: TextStyle(color: Colors.red, fontSize: 20)),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 5),
                         child: Text(
-                            '$_hardCorrect/$_hardTotal questions answered correctly in $_hardQuizes quizzes'),
+                            '$_hardCorrect/$_hardTotal ${context.tr('questions-answered-correctly-in')} $_hardQuizes ${context.tr('quizzes')}'),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -423,14 +424,14 @@ class _StatsPageState extends State<StatsPage> {
                 Card(
                   child: Column(
                     children: [
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.only(bottom: 5),
-                        child: Text('Total', style: TextStyle(fontSize: 20)),
+                        child: Text(context.tr('all'), style: TextStyle(fontSize: 20)),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 5),
                         child: Text(
-                            '$_totalCorrect/$_totalQuestions questions answered correctly in $_totalQuizes quizzes'),
+                            '$_totalCorrect/$_totalQuestions ${context.tr('questions-answered-correctly-in')} $_totalQuizes ${context.tr('quizzes')}'),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),

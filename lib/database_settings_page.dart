@@ -25,6 +25,7 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class DatabaseSettings extends StatefulWidget {
   const DatabaseSettings({super.key, required this.databaseCodename});
@@ -104,16 +105,16 @@ class _DatabaseSettingsState extends State<DatabaseSettings> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Success'),
-            content: const Text(
-                'Settings have been updated. Please close the app and launch it again to apply the changes.'),
+            title: Text(context.tr("success")),
+            content: Text(
+                context.tr("settings-updated")),
             actions: <Widget>[
               TextButton(
-                child: const Row(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Icon(Icons.close_rounded),
-                    Text('Close the app'),
+                    Text(context.tr("close-the-app")),
                   ],
                 ),
                 onPressed: () {
@@ -134,7 +135,7 @@ class _DatabaseSettingsState extends State<DatabaseSettings> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: Text('Database Settings'),
+        title: Text(context.tr("database-settings")),
       ),
       body: Center(
         child: Column(
@@ -149,14 +150,14 @@ class _DatabaseSettingsState extends State<DatabaseSettings> {
                   });
                 },
                 value: _selectedDatabase,
-                hint: const Text('Select question source'),
+                hint: Text(context.tr("select-source")),
               ),
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: () {
                 updateSelectedDatabase(_selectedDatabase);
               },
-              child: const Text('Save'),
+              child: Text(context.tr("save")),
             ),
             const SizedBox(height: 200),
           ],

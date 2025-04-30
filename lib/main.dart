@@ -25,19 +25,27 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:triviology/navigation_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
   await checkAndCreateSettingsFile();
   String databaseJson = await File(
           '${(await getApplicationDocumentsDirectory()).path}/settings.json')
       .readAsString();
   final databaseSettings = jsonDecode(databaseJson);
-  runApp(MyApp(
+  runApp(EasyLocalization(
+      supportedLocales: [Locale('pl', 'PL'), Locale('en', 'US')],
+      path: 'assets/translations',
+      fallbackLocale: Locale('pl', 'PL'),
+      child: MyApp(
       databaseName: databaseSettings['databaseName'],
       databaseUrl: databaseSettings['databaseUrl'],
       databaseCodename: databaseSettings['databaseCodename'],
-      databaseSavefile: databaseSettings['databaseSavefile']));
+      databaseSavefile: databaseSettings['databaseSavefile'])
+    ),
+    );
 }
 
 Future<void> checkAndCreateSettingsFile() async {
@@ -132,6 +140,9 @@ class MyApp extends StatelessWidget {
           databaseCodename: databaseCodename,
           databaseSavefile: databaseSavefile),
       debugShowCheckedModeBanner: false,
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
     );
   }
 }

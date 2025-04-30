@@ -24,6 +24,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:triviology/quiz_page.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class QuizSettingsPage extends StatefulWidget {
   const QuizSettingsPage(
@@ -78,7 +79,7 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
     print(_decodedQuestionCount);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Quiz Settings'),
+        title: Text(context.tr("quiz-settings")),
       ),
       body: Center(
         child: Column(
@@ -124,10 +125,10 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            const Text('Easy', style: TextStyle(fontSize: 20)),
+                            Text(context.tr("easy"), style: TextStyle(fontSize: 20)),
                             const Icon(Icons.star_rounded,
                                 color: Colors.yellow),
-                            const Text('    1XP  / answer    '),
+                             Text('    1XP  / ${context.tr("answer")}    '),
                             Radio(
                               value: 'easy',
                               groupValue: _difficulty,
@@ -151,7 +152,7 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            const Text('Medium',
+                            Text(context.tr("medium"),
                                 style: TextStyle(fontSize: 20)),
                             const Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -160,7 +161,7 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                                 Icon(Icons.star_rounded, color: Colors.yellow),
                               ],
                             ),
-                            const Text('    2XP  / answer    '),
+                            Text('    2XP  / ${context.tr("answer")}    '),
                             Radio(
                               value: 'medium',
                               groupValue: _difficulty,
@@ -184,7 +185,7 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            const Text('Hard', style: TextStyle(fontSize: 20)),
+                            Text(context.tr("hard"), style: TextStyle(fontSize: 20)),
                             const Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -193,7 +194,7 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                                 Icon(Icons.star_rounded, color: Colors.yellow),
                               ],
                             ),
-                            const Text('    3XP  / answer    '),
+                            Text('    3XP  / ${context.tr("answer")}    '),
                             Radio(
                               value: 'hard',
                               groupValue: _difficulty,
@@ -212,7 +213,7 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
               ),
             ],
             if (_current_setting == 1) ...[
-              const Text('Question type:'),
+              Text(context.tr("question-type")),
               /*Slider(
                 value: _questionType == 'boolean'
                     ? 0
@@ -259,7 +260,7 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                                     color: Colors.red, size: 40),
                               ],
                             ),
-                            const Text('Multiple Choice',
+                            Text(context.tr("multiple"),
                                 style: TextStyle(fontSize: 18)),
                             Radio(
                               value: 'multiple',
@@ -298,7 +299,7 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                                 ),
                               ],
                             ),
-                            const Text('True/False',
+                            Text(context.tr("boolean"),
                                 style: TextStyle(fontSize: 18)),
                             Radio(
                               value: 'boolean',
@@ -326,7 +327,7 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                               Icons.shuffle, // Icons.casino_outlined
                               size: 40,
                             ),
-                            const Text('Any type',
+                            Text(context.tr("any"),
                                 style: TextStyle(fontSize: 18)),
                             Radio(
                               value: 'any',
@@ -346,7 +347,7 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
               ),
             ],
             if (_current_setting == 2) ...[
-              const Text('Number of questions:'),
+              Text(context.tr("number-of-questions")),
               Slider(
                 value: _numOfQuestions.toDouble(),
                 min: 1,
@@ -377,7 +378,7 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                         _current_setting--;
                       });
                     },
-                    child: const Text('Previous'),
+                    child: Text(context.tr("previous")),
                   ),
                 ],
                 ElevatedButton(
@@ -392,7 +393,7 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                     print(widget.databaseType);
                     if (_current_setting == 2) {
                       print(
-                          'Quiz started with $_numOfQuestions questions, $_difficulty difficulty, and $_questionType question type.');
+                          '${context.tr("quiz-started-with")} $_numOfQuestions ${context.tr("questions-comma")} $_difficulty ${context.tr("diff-and")} $_questionType ${context.tr("question-type-dot")}');
                       Navigator.pushAndRemoveUntil(context,
                           MaterialPageRoute(builder: (context) {
                         return QuizPage(
@@ -417,8 +418,8 @@ class _QuizSettingsPageState extends State<QuizSettingsPage> {
                     }
                   },
                   child: _current_setting == 2
-                      ? const Text('Start Quiz')
-                      : const Text('Next'),
+                      ? Text(context.tr("start-quiz"))
+                      : Text(context.tr("next")),
                 ),
               ],
             ),

@@ -20,8 +20,8 @@
 ! To contribute, please read the CONTRIBUTING.md file in the root of the project.
 ? It contains important information about the project structure, code style, suggested VSCode extensions, and more.
 */
-
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class AchievementsPage extends StatelessWidget {
   const AchievementsPage({
@@ -79,11 +79,11 @@ class AchievementsPage extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          const ListTile(
-            title: Center(child: Text('Easy', style: TextStyle(fontSize: 20))),
+          ListTile(
+            title: Center(child: Text(context.tr("easy"), style: TextStyle(fontSize: 20))),
           ),
           ListTile(
-            title: Text('Correctly answer 2 easy questions',
+            title: Text(context.tr("easy_correct_2"),
                 style: TextStyle(
                     color: easyCorrect >= 2
                         ? Colors.green
@@ -92,7 +92,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 4 easy questions',
+            title: Text(context.tr("easy_correct_4"),
                 style: TextStyle(
                     color: easyCorrect >= 4
                         ? Colors.green
@@ -101,7 +101,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 8 easy questions',
+            title: Text(context.tr("easy_correct_8"),
                 style: TextStyle(
                     color: easyCorrect >= 8
                         ? Colors.green
@@ -110,7 +110,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 16 easy questions',
+            title: Text(context.tr("easy_correct_16"),
                 style: TextStyle(
                     color: easyCorrect >= 16
                         ? Colors.green
@@ -119,7 +119,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 32 easy questions',
+            title: Text(context.tr("easy_correct_32"),
                 style: TextStyle(
                     color: easyCorrect >= 32
                         ? Colors.green
@@ -128,7 +128,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 64 easy questions',
+            title: Text(context.tr("easy_correct_64"),
                 style: TextStyle(
                     color: easyCorrect >= 64
                         ? Colors.green
@@ -137,7 +137,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 128 easy questions',
+            title: Text(context.tr("easy_correct_128"),
                 style: TextStyle(
                     color: easyCorrect >= 128
                         ? Colors.green
@@ -146,7 +146,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 256 easy questions',
+            title: Text(context.tr("easy_correct_256"),
                 style: TextStyle(
                     color: easyCorrect >= 256
                         ? Colors.green
@@ -155,7 +155,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 50% of at least 20 easy questions',
+            title: Text(context.tr("easy_50_percent_20"),
                 style: TextStyle(
                     color:
                         easyCorrect / easyTotal * 100 >= 50 && easyTotal >= 20
@@ -165,7 +165,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 75% of at least 20 easy questions',
+            title: Text(context.tr("easy_75_percent_20"),
                 style: TextStyle(
                     color:
                         easyCorrect / easyTotal * 100 >= 75 && easyTotal >= 20
@@ -175,7 +175,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 100% of at least 20 easy questions',
+            title: Text(context.tr("easy_100_percent_20"),
                 style: TextStyle(
                     color:
                         easyCorrect / easyTotal * 100 >= 100 && easyTotal >= 20
@@ -188,7 +188,7 @@ class AchievementsPage extends StatelessWidget {
             title: Center(child: Text('-------------------------')),
           ),
           ListTile(
-            title: Text('Correctly answer 2 easy questions in a row',
+            title: Text(context.tr("easy_streak_2_correct"),
                 style: TextStyle(
                     color: easyMaxCorrectAnswersStreak >= 2
                         ? Colors.green
@@ -197,7 +197,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 4 easy questions in a row',
+            title: Text(context.tr("easy_streak_4_correct"),
                 style: TextStyle(
                     color: easyMaxCorrectAnswersStreak >= 4
                         ? Colors.green
@@ -206,7 +206,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 8 easy questions in a row',
+            title: Text(context.tr("easy_streak_8_correct"),
                 style: TextStyle(
                     color: easyMaxCorrectAnswersStreak >= 8
                         ? Colors.green
@@ -215,7 +215,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 16 easy questions in a row',
+            title: Text(context.tr("easy_streak_16_correct"),
                 style: TextStyle(
                     color: easyMaxCorrectAnswersStreak >= 16
                         ? Colors.green
@@ -224,7 +224,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 32 easy questions in a row',
+            title: Text(context.tr("easy_streak_32_correct"),
                 style: TextStyle(
                     color: easyMaxCorrectAnswersStreak >= 32
                         ? Colors.green
@@ -233,7 +233,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Incorrectly answer 2 easy questions in a row',
+            title: Text(context.tr("easy_streak_2_incorrect"),
                 style: TextStyle(
                     color: easyMaxIncorrectAnswersStreak >= 2
                         ? Colors.green
@@ -242,7 +242,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Incorrectly answer 4 easy questions in a row',
+            title: Text(context.tr("easy_streak_4_incorrect"),
                 style: TextStyle(
                     color: easyMaxIncorrectAnswersStreak >= 4
                         ? Colors.green
@@ -251,7 +251,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Incorrectly answer 8 easy questions in a row',
+            title: Text(context.tr("easy_streak_8_incorrect"),
                 style: TextStyle(
                     color: easyMaxIncorrectAnswersStreak >= 8
                         ? Colors.green
@@ -260,7 +260,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Incorrectly answer 16 easy questions in a row',
+            title: Text(context.tr("easy_streak_16_incorrect"),
                 style: TextStyle(
                     color: easyMaxIncorrectAnswersStreak >= 16
                         ? Colors.green
@@ -269,7 +269,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Incorrectly answer 32 easy questions in a row',
+            title: Text(context.tr("easy_streak_32_incorrect"),
                 style: TextStyle(
                     color: easyMaxIncorrectAnswersStreak >= 32
                         ? Colors.green
@@ -277,12 +277,12 @@ class AchievementsPage extends StatelessWidget {
             subtitle: Text(categoryName),
             leading: categoryIcon,
           ),
-          const ListTile(
+          ListTile(
             title:
-                Center(child: Text('Medium', style: TextStyle(fontSize: 20))),
+                Center(child: Text(context.tr("medium"), style: TextStyle(fontSize: 20))),
           ),
           ListTile(
-            title: Text('Correctly answer 2 medium questions',
+            title: Text(context.tr("medium_correct_2"),
                 style: TextStyle(
                     color: mediumCorrect >= 2
                         ? Colors.green
@@ -291,7 +291,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 4 medium questions',
+            title: Text(context.tr("medium_correct_4"),
                 style: TextStyle(
                     color: mediumCorrect >= 4
                         ? Colors.green
@@ -300,7 +300,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 8 medium questions',
+            title: Text(context.tr("medium_correct_8"),
                 style: TextStyle(
                     color: mediumCorrect >= 8
                         ? Colors.green
@@ -309,7 +309,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 16 medium questions',
+            title: Text(context.tr("medium_correct_16"),
                 style: TextStyle(
                     color: mediumCorrect >= 16
                         ? Colors.green
@@ -318,7 +318,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 32 medium questions',
+            title: Text(context.tr("medium_correct_32"),
                 style: TextStyle(
                     color: mediumCorrect >= 32
                         ? Colors.green
@@ -327,7 +327,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 64 medium questions',
+            title: Text(context.tr("medium_correct_64"),
                 style: TextStyle(
                     color: mediumCorrect >= 64
                         ? Colors.green
@@ -336,7 +336,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 128 medium questions',
+            title: Text('context.tr("medium_correct_128")',
                 style: TextStyle(
                     color: mediumCorrect >= 128
                         ? Colors.green
@@ -345,7 +345,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 256 medium questions',
+            title: Text(context.tr("medium_correct_256"),
                 style: TextStyle(
                     color: mediumCorrect >= 256
                         ? Colors.green
@@ -354,7 +354,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 50% of at least 20 medium questions',
+            title: Text(context.tr("medium_50_percent_20"),
                 style: TextStyle(
                     color: mediumCorrect / mediumTotal * 100 >= 50 &&
                             mediumTotal >= 20
@@ -365,7 +365,7 @@ class AchievementsPage extends StatelessWidget {
             //trailing: const Text('2XP'),
           ),
           ListTile(
-            title: Text('Correctly answer 75% of at least 20 medium questions',
+            title: Text(context.tr("medium_75_percent_20"),
                 style: TextStyle(
                     color: mediumCorrect / mediumTotal * 100 >= 75 &&
                             mediumTotal >= 20
@@ -375,7 +375,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 100% of at least 20 medium questions',
+            title: Text(context.tr("medium_100_percent_20"),
                 style: TextStyle(
                     color: mediumCorrect / mediumTotal * 100 >= 100 &&
                             mediumTotal >= 20
@@ -388,7 +388,7 @@ class AchievementsPage extends StatelessWidget {
             title: Center(child: Text('-------------------------')),
           ),
           ListTile(
-            title: Text('Correctly answer 2 medium questions in a row',
+            title: Text(context.tr("medium_streak_2_correct"),
                 style: TextStyle(
                     color: mediumMaxCorrectAnswersStreak >= 2
                         ? Colors.green
@@ -397,7 +397,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 4 medium questions in a row',
+            title: Text(context.tr("medium_streak_4_correct"),
                 style: TextStyle(
                     color: mediumMaxCorrectAnswersStreak >= 4
                         ? Colors.green
@@ -406,7 +406,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 8 medium questions in a row',
+            title: Text(context.tr("medium_streak_8_correct"),
                 style: TextStyle(
                     color: mediumMaxCorrectAnswersStreak >= 8
                         ? Colors.green
@@ -415,7 +415,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 16 medium questions in a row',
+            title: Text(context.tr("medium_streak_16_correct"),
                 style: TextStyle(
                     color: mediumMaxCorrectAnswersStreak >= 16
                         ? Colors.green
@@ -424,7 +424,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 32 medium questions in a row',
+            title: Text(context.tr("medium_streak_32_correct"),
                 style: TextStyle(
                     color: mediumMaxCorrectAnswersStreak >= 32
                         ? Colors.green
@@ -433,7 +433,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Incorrectly answer 2 medium questions in a row',
+            title: Text(context.tr("medium_streak_2_incorrect"),
                 style: TextStyle(
                     color: mediumMaxIncorrectAnswersStreak >= 2
                         ? Colors.green
@@ -442,7 +442,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Incorrectly answer 4 medium questions in a row',
+            title: Text(context.tr("medium_streak_4_incorrect"),
                 style: TextStyle(
                     color: mediumMaxIncorrectAnswersStreak >= 4
                         ? Colors.green
@@ -451,7 +451,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Incorrectly answer 8 medium questions in a row',
+            title: Text(context.tr("medium_streak_8_incorrect"),
                 style: TextStyle(
                     color: mediumMaxIncorrectAnswersStreak >= 8
                         ? Colors.green
@@ -460,7 +460,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Incorrectly answer 16 medium questions in a row',
+            title: Text(context.tr("medium_streak_16_incorrect"),
                 style: TextStyle(
                     color: mediumMaxIncorrectAnswersStreak >= 16
                         ? Colors.green
@@ -469,7 +469,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Incorrectly answer 32 medium questions in a row',
+            title: Text(context.tr("medium_streak_32_incorrect"),
                 style: TextStyle(
                     color: mediumMaxIncorrectAnswersStreak >= 32
                         ? Colors.green
@@ -477,11 +477,11 @@ class AchievementsPage extends StatelessWidget {
             subtitle: Text(categoryName),
             leading: categoryIcon,
           ),
-          const ListTile(
-            title: Center(child: Text('Hard', style: TextStyle(fontSize: 20))),
+          ListTile(
+            title: Center(child: Text(context.tr("hard"), style: TextStyle(fontSize: 20))),
           ),
           ListTile(
-            title: Text('Correctly answer 2 hard questions',
+            title: Text(context.tr("hard_correct_2"),
                 style: TextStyle(
                     color: hardCorrect >= 2
                         ? Colors.green
@@ -490,7 +490,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 4 hard questions',
+            title: Text(context.tr("hard_correct_4"),
                 style: TextStyle(
                     color: hardCorrect >= 4
                         ? Colors.green
@@ -499,7 +499,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 8 hard questions',
+            title: Text(context.tr("hard_correct_8"),
                 style: TextStyle(
                     color: hardCorrect >= 8
                         ? Colors.green
@@ -508,7 +508,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 16 hard questions',
+            title: Text(context.tr("hard_correct_16"),
                 style: TextStyle(
                     color: hardCorrect >= 16
                         ? Colors.green
@@ -517,7 +517,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 32 hard questions',
+            title: Text(context.tr("hard_correct_32"),
                 style: TextStyle(
                     color: hardCorrect >= 32
                         ? Colors.green
@@ -526,7 +526,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 64 hard questions',
+            title: Text(context.tr("hard_correct_64"),
                 style: TextStyle(
                     color: hardCorrect >= 64
                         ? Colors.green
@@ -535,7 +535,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 128 hard questions',
+            title: Text(context.tr("hard_correct_128"),
                 style: TextStyle(
                     color: hardCorrect >= 128
                         ? Colors.green
@@ -544,7 +544,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 256 hard questions',
+            title: Text(context.tr("hard_correct_256"),
                 style: TextStyle(
                     color: hardCorrect >= 256
                         ? Colors.green
@@ -553,7 +553,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 50% of at least 20 hard questions',
+            title: Text(context.tr("hard_50_percent_20"),
                 style: TextStyle(
                     color:
                         hardCorrect / hardTotal * 100 >= 50 && hardTotal >= 20
@@ -564,7 +564,7 @@ class AchievementsPage extends StatelessWidget {
             //trailing: const Text('2XP'),
           ),
           ListTile(
-            title: Text('Correctly answer 75% of at least 20 hard questions',
+            title: Text(context.tr("hard_75_percent_20"),
                 style: TextStyle(
                     color:
                         hardCorrect / hardTotal * 100 >= 75 && hardTotal >= 20
@@ -574,7 +574,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 100% of at least 20 hard questions',
+            title: Text(context.tr("hard_100_percent_20"),
                 style: TextStyle(
                     color:
                         hardCorrect / hardTotal * 100 >= 100 && hardTotal >= 20
@@ -587,7 +587,7 @@ class AchievementsPage extends StatelessWidget {
             title: Center(child: Text('-------------------------')),
           ),
           ListTile(
-            title: Text('Correctly answer 2 hard questions in a row',
+            title: Text(context.tr("hard_streak_2_correct"),
                 style: TextStyle(
                     color: hardMaxCorrectAnswersStreak >= 2
                         ? Colors.green
@@ -596,7 +596,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 4 hard questions in a row',
+            title: Text(context.tr("hard_streak_4_correct"),
                 style: TextStyle(
                     color: hardMaxCorrectAnswersStreak >= 4
                         ? Colors.green
@@ -605,7 +605,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 8 hard questions in a row',
+            title: Text(context.tr("hard_streak_8_correct"),
                 style: TextStyle(
                     color: hardMaxCorrectAnswersStreak >= 8
                         ? Colors.green
@@ -614,7 +614,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 16 hard questions in a row',
+            title: Text(context.tr("hard_streak_16_correct"),
                 style: TextStyle(
                     color: hardMaxCorrectAnswersStreak >= 16
                         ? Colors.green
@@ -623,7 +623,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 32 hard questions in a row',
+            title: Text(context.tr("hard_streak_32_correct"),
                 style: TextStyle(
                     color: hardMaxCorrectAnswersStreak >= 32
                         ? Colors.green
@@ -632,7 +632,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Incorrectly answer 2 hard questions in a row',
+            title: Text(context.tr("hard_streak_2_incorrect"),
                 style: TextStyle(
                     color: hardMaxIncorrectAnswersStreak >= 2
                         ? Colors.green
@@ -641,7 +641,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Incorrectly answer 4 hard questions in a row',
+            title: Text(context.tr("hard_streak_4_incorrect"),
                 style: TextStyle(
                     color: hardMaxIncorrectAnswersStreak >= 4
                         ? Colors.green
@@ -650,7 +650,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Incorrectly answer 8 hard questions in a row',
+            title: Text(context.tr("hard_streak_8_incorrect"),
                 style: TextStyle(
                     color: hardMaxIncorrectAnswersStreak >= 8
                         ? Colors.green
@@ -659,7 +659,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Incorrectly answer 16 hard questions in a row',
+            title: Text(context.tr("hard_streak_16_incorrect"),
                 style: TextStyle(
                     color: hardMaxIncorrectAnswersStreak >= 16
                         ? Colors.green
@@ -668,7 +668,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Incorrectly answer 32 hard questions in a row',
+            title: Text(context.tr("hard_streak_32_incorrect"),
                 style: TextStyle(
                     color: hardMaxIncorrectAnswersStreak >= 32
                         ? Colors.green
@@ -676,11 +676,11 @@ class AchievementsPage extends StatelessWidget {
             subtitle: Text(categoryName),
             leading: categoryIcon,
           ),
-          const ListTile(
-            title: Center(child: Text('All', style: TextStyle(fontSize: 20))),
+          ListTile(
+            title: Center(child: Text(context.tr("all"), style: TextStyle(fontSize: 20))),
           ),
           ListTile(
-            title: Text('Correctly answer 2 questions',
+            title: Text(context.tr("all_correct_2"),
                 style: TextStyle(
                     color: totalCorrect >= 2
                         ? Colors.green
@@ -689,7 +689,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 4 questions',
+            title: Text(context.tr("all_correct_4"),
                 style: TextStyle(
                     color: totalCorrect >= 4
                         ? Colors.green
@@ -698,7 +698,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 8 questions',
+            title: Text(context.tr("all_correct_8"),
                 style: TextStyle(
                     color: totalCorrect >= 8
                         ? Colors.green
@@ -707,7 +707,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 16 questions',
+            title: Text(context.tr("all_correct_16"),
                 style: TextStyle(
                     color: totalCorrect >= 16
                         ? Colors.green
@@ -716,7 +716,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 32 questions',
+            title: Text(context.tr("all_correct_32"),
                 style: TextStyle(
                     color: totalCorrect >= 32
                         ? Colors.green
@@ -725,7 +725,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 64 questions',
+            title: Text(context.tr("all_correct_64"),
                 style: TextStyle(
                     color: totalCorrect >= 64
                         ? Colors.green
@@ -734,7 +734,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 128 questions',
+            title: Text(context.tr("all_correct_128"),
                 style: TextStyle(
                     color: totalCorrect >= 128
                         ? Colors.green
@@ -743,7 +743,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 256 questions',
+            title: Text(context.tr("all_correct_256"),
                 style: TextStyle(
                     color: totalCorrect >= 256
                         ? Colors.green
@@ -752,7 +752,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 50% of at least 20 questions',
+            title: Text(context.tr("all_50_percent_20"),
                 style: TextStyle(
                     color: totalCorrect / totalCorrect * 100 >= 50 &&
                             totalCorrect >= 20
@@ -763,7 +763,7 @@ class AchievementsPage extends StatelessWidget {
             //trailing: const Text('2XP'),
           ),
           ListTile(
-            title: Text('Correctly answer 75% of at least 20 questions',
+            title: Text(context.tr("all_75_percent_20"),
                 style: TextStyle(
                     color: totalCorrect / totalQuestions * 100 >= 75 &&
                             totalQuestions >= 20
@@ -773,7 +773,7 @@ class AchievementsPage extends StatelessWidget {
             leading: categoryIcon,
           ),
           ListTile(
-            title: Text('Correctly answer 100% of at least 20 questions',
+            title: Text(context.tr("all_100_percent_20"),
                 style: TextStyle(
                     color: totalCorrect / totalQuestions * 100 >= 100 &&
                             totalQuestions >= 20

@@ -27,6 +27,7 @@ import 'package:triviology/quiz_summary_page.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as htmlParser;
+import 'package:easy_localization/easy_localization.dart';
 
 class QuizPage extends StatefulWidget {
   const QuizPage({
@@ -118,9 +119,9 @@ class _QuizPageState extends State<QuizPage> {
               context: context,
               builder: (context) {
                 return AlertDialog(
-                  title: const Text('Error'),
-                  content: const Text(
-                      'There are not enough questions in the category/difficulty combination you selected. Please try again with different settings, or change the questions source.'),
+                  title: Text(context.tr("error")),
+                  content: Text(
+                      context.tr("question-amount-error")),
                   actions: [
                     TextButton(
                       onPressed: () {
@@ -141,7 +142,7 @@ class _QuizPageState extends State<QuizPage> {
                                     selectedIndex: 2)),
                             (Route<dynamic> route) => false);
                       },
-                      child: const Text('Settings'),
+                      child: Text(context.tr("settings")),
                     ),
                   ],
                 );
@@ -186,9 +187,9 @@ class _QuizPageState extends State<QuizPage> {
             context: context,
             builder: (context) {
               return AlertDialog(
-                title: const Text('Error'),
-                content: const Text(
-                    'There are not enough questions in the category/difficulty combination you selected. Please try again with different settings, or change the questions source.'),
+                title: Text(context.tr("error")),
+                content: Text(
+                   context.tr("question-amount-error")),
                 actions: [
                   TextButton(
                     onPressed: () {
@@ -209,7 +210,7 @@ class _QuizPageState extends State<QuizPage> {
                                   selectedIndex: 2)),
                           (Route<dynamic> route) => false);
                     },
-                    child: const Text('Settings'),
+                    child: Text(context.tr("settings")),
                   ),
                 ],
               );
@@ -323,15 +324,15 @@ class _QuizPageState extends State<QuizPage> {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: const Text('Confirm Exit'),
-                  content: const Text(
-                      'Are you sure you want to exit the quiz? You current progress will not be saved.'),
+                  title: Text(context.tr("confirm-exit")),
+                  content: Text(
+                      context.tr("confirm-exit-text")),
                   actions: [
                     TextButton(
                       onPressed: () {
                         Navigator.of(context).pop(); // Close the dialog
                       },
-                      child: const Text('Cancel'),
+                      child: Text(context.tr("cancel")),
                     ),
                     TextButton(
                       onPressed: () {
@@ -340,7 +341,7 @@ class _QuizPageState extends State<QuizPage> {
                             (Route<dynamic> route) =>
                                 false); // Navigate back to home
                       },
-                      child: const Text('Exit'),
+                      child: Text(context.tr("exit")),
                     ),
                   ],
                 );
